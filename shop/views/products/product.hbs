@@ -1,0 +1,22 @@
+<main>
+    <div class="row product_info_container">
+        <div class="product_info">
+            <div class="product_image col-4">
+                <img src="/images/glass1.png" alt="Sunglasses Image">
+            </div>
+            <div class="product_details col-8">
+                {{#with (getProduct currentIndex)}}
+                    <h3>{{name}}</h3>
+                    <p>Price: {{price}}</p>
+                    <p>{{description}}</p>
+                {{/with}}
+                <br>
+                <button onclick="add_to_cart()" class="add_to_cart">Add to cart</button>
+                <div class="product-navigation">
+                    <button id="prev-product">Previous</button>
+                    <button id="next-product">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
