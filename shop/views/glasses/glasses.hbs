@@ -1,0 +1,30 @@
+<div class="glasses">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="titlepage">
+                    <h2>Our Glasses</h2>
+                    <p>When it comes to finding the perfect pair of glasses, it’s not just about vision—it’s about style, comfort, and enhancing one’s daily life. Whether you need prescription lenses for work, blue light blocking glasses for screen time, or a stylish pair of sunglasses, the right frames can make all the difference. Selling glasses is about matching each customer with frames that not only fit their face but also reflect their personality and lifestyle. With a wide range of designs, lens options, and frame materials, selling glasses offers an opportunity to help people look good, feel confident, and see clearly.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            {{#each products}}
+            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
+                <div class="glasses_box">
+                    <figure><img src={{image}} alt="#"/></figure>
+                    <h3><span class="blu">$</span>{{price}}</h3>
+                    <p>{{name}}</p>
+                    <div class="des">{{description}}</div>
+                    <div class="view">
+                        <a href="glasses/{{id}}">View more</a> 
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</div>
