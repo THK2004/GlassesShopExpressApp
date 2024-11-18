@@ -1,8 +1,10 @@
 var express = require('express');
-var { getRegister } = require("../controllers/registerController");
+var { getRegister,postRegister  } = require("../controllers/registerController");
 var router = express.Router();
 
 /* GET register page. */
 router.get('/', getRegister);
+// POST form submission
+router.post('/', postRegister);
 
 module.exports = router;

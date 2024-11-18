@@ -13,6 +13,12 @@ var loginRouter = require('./routes/login');
 var registerRouter = require('./routes/register');
 var shopRouter = require('./routes/shop');
 
+const db = require('./config/db');
+
+// const databaseUrl = 'mongodb://localhost:27017/F8Courses';
+const databaseUrl ='mongodb+srv://kh13m:khiemvu0511@kh13m.i8a1d.mongodb.net/?retryWrites=true&w=majority&appName=kh13m';
+db.connect(databaseUrl);
+
 var app = express();
 
 // view engine setup
@@ -52,7 +58,7 @@ app.use(function(err, req, res, next) {
 
 module.exports = app;
 
-var port = 3000;
+var port = 3001;
 app.listen(port, () => {
   console.log('Listening...')
 })

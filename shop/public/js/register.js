@@ -19,26 +19,36 @@ function showNotification(message, type = 'success') {
     }, 3000);
 }
 
-function register() {
-    const username = document.getElementById('username').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value.trim();
-    const confirmPassword = document.getElementById('confirmPassword').value.trim();
+// async function register() {
+//     const username = document.getElementById('username').value;
+//     const email = document.getElementById('email').value;
+//     const password = document.getElementById('password').value;
+//     const confirmPassword = document.getElementById('confirmPassword').value;
 
-    // Validate all fields are filled
-    if (!username || !email || !password || !confirmPassword) {
-        showNotification('Please fill in all fields!', 'error');
-        return;
-    }
+//     try {
+//         const response = await fetch('/register', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//             body: JSON.stringify({ 
+//                 username, 
+//                 email, 
+//                 password, 
+//                 confirmPassword 
+//             })
+//         });
 
-    // Check if passwords match
-    if (password !== confirmPassword) {
-        showNotification('Passwords do not match!', 'error');
-        return;
-    }
+//         const data = await response.json();
 
-    // Registration success message
-    showNotification('Registration successful!', 'success');
-
-    // Additional registration logic can go here, such as an API call or redirect
-}
+//         if (response.ok) {
+//             alert(data.message);
+//             window.location.href = data.redirect;
+//         } else {
+//             alert(data.message);
+//         }
+//     } catch (error) {
+//         console.error('Registration error:', error);
+//         alert('Registration failed. Please try again.');
+//     }
+// }
