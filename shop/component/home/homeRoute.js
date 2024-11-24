@@ -1,5 +1,5 @@
 var express = require('express');
-var { getHome, getAbout, getContact, getShop } = require("../controllers/homeController");
+var { getHome, getAbout, getContact, getShop } = require("./homeController");
 var router = express.Router();
 
 /* GET home page. */

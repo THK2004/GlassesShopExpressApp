@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs'); // For password hashing
-const user = require('../models/user'); // Path to your user.js file
+const userService = require('./userService');
 
 // Render the registration page
 const getRegister = (req, res) => {
@@ -19,15 +19,8 @@ const postRegister = async (req, res) => {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create a new user
-    const newuser = new user({
-      username,
-      email,
-      password: hashedPassword,
-    });
-
     // Save the user to the database
-    await newuser.save();
+    await userService.saveUser(username, email, hashedPassword);
 
     // Redirect or respond with success
     res.status(201).redirect('/user/login'); // Adjust the route as needed

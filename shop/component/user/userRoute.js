@@ -1,5 +1,5 @@
 var express = require('express');
-var { getRegister, postRegister, getLogin  } = require("../controllers/userController");
+var { getRegister, postRegister, getLogin  } = require("./userController");
 var router = express.Router();
 
 /* GET login page. */

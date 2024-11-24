@@ -1,5 +1,5 @@
 var express = require('express');
-var { getGlasses, getProductDetail } = require("../controllers/productController");
+var { getGlasses, getProductDetail } = require("./productController");
 var router = express.Router();
 
 /* GET glasses (product list) page. */

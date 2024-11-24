@@ -4,16 +4,17 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var hbs = require('hbs');
+var db = require('./config/db');
+require('dotenv').config({ path: 'dbconfig.env' })
 
-var homeRouter = require('./routes/home');
-var userRouter = require('./routes/user');
-var productRouter = require('./routes/product');
+var homeRouter = require('./component/home/homeRoute');
+var userRouter = require('./component/user/userRoute');
+var productRouter = require('./component/product/productRoute');
 
-const db = require('./config/db');
-
-// const databaseUrl = 'mongodb://localhost:27017/F8Courses';
-const databaseUrl ='mongodb+srv://kh13m:khiemvu0511@kh13m.i8a1d.mongodb.net/?retryWrites=true&w=majority&appName=kh13m';
-db.connect(databaseUrl);
+const dbconfig = {
+  url: process.env.DB_URL || ""
+}
+db.connect(dbconfig.url);
 
 var app = express();
 
