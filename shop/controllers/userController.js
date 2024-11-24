@@ -30,7 +30,7 @@ const postRegister = async (req, res) => {
     await newuser.save();
 
     // Redirect or respond with success
-    res.status(201).redirect('/login'); // Adjust the route as needed
+    res.status(201).redirect('/user/login'); // Adjust the route as needed
   } catch (error) {
     console.error(error);
     if (error.code === 11000) {
