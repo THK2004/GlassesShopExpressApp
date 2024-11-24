@@ -1,13 +1,5 @@
-// const getRegister = (req, res) => {
-//     res.render('register/register', {register: true});
-// }
-
-// module.exports = {
-//     getRegister
-// }
-
 const bcrypt = require('bcryptjs'); // For password hashing
-const Customer = require('../models/Customer'); // Path to your Customer.js file
+const user = require('../models/user'); // Path to your user.js file
 
 // Render the registration page
 const getRegister = (req, res) => {
@@ -27,15 +19,15 @@ const postRegister = async (req, res) => {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create a new customer
-    const newCustomer = new Customer({
+    // Create a new user
+    const newuser = new user({
       username,
       email,
       password: hashedPassword,
     });
 
-    // Save the customer to the database
-    await newCustomer.save();
+    // Save the user to the database
+    await newuser.save();
 
     // Redirect or respond with success
     res.status(201).redirect('/login'); // Adjust the route as needed
@@ -50,7 +42,12 @@ const postRegister = async (req, res) => {
   }
 };
 
+const getLogin = (req, res) => {
+  res.render('login/login', {login: true});
+}
+
 module.exports = {
   getRegister,
   postRegister,
+  getLogin
 };

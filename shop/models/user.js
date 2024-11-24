@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-// Define the Customer schema
-const Customer = new Schema(
+// Define the user schema
+const user = new Schema(
   {
     username: {
       type: String,
@@ -28,4 +28,4 @@ const Customer = new Schema(
   }
 );
 
-module.exports = mongoose.model('Customer', Customer);
+module.exports = mongoose.model('user', user);
