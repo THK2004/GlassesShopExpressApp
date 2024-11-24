@@ -8,6 +8,7 @@ module.exports = {
       brand: productData.brand || 'Unknown Brand',
       material: productData.material || 'Unknown Material',
       image: productData.image || 'images/default.png',
+      sex: productData.sex || 'Unknown'.
     };
   },
 };
