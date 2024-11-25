@@ -43,16 +43,58 @@ async function getProduct() {
   }
 }
 
-async function filterProducts({}) {
-  try{
-    await client.connect();
-    const database = client.db("products");
-    const collection = database.collection("products");
+async function filterProducts({ brand, material, priceRange, sex, searchQuery }) {
+  try {
+      // Connect to the database
+      await client.connect();
+      const database = client.db("products");
+      const collection = database.collection("products");
 
+      // Build the query object dynamically based on filter parameters
+      const query = {};
+
+      if (brand) {
+          query.brand = brand;
+      }
+
+      if (material) {
+          query.material = material;
+      }
+
+      if (sex) {
+          query.sex = sex;
+      }
+
+      if (priceRange) {
+          if (priceRange === 'under500') {
+              query.price = { $lte: 500 };
+          } else if (priceRange === 'over1000') {
+              query.price = { $gte: 1000 };
+          }
+      }
+
+      if (searchQuery) {
+          query.name = { $regex: searchQuery, $options: 'i' };  // Case-insensitive search
+      }
+
+      // Fetch the filtered products from the database
+      const productsData = await collection.find(query).toArray();
+
+      // Map to desired document format (if needed)
+      const products = productsData.map(createProductDocument);
+
+      return products;
+  } catch (error) {
+      console.error("Error filtering products:", error);
+      return [];
+  } finally {
+      await client.close();
   }
 }
+
 
 // Export the function
 module.exports = {
   getProduct,
+  filterProducts,
 };
