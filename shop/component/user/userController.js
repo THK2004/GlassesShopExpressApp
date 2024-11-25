@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs'); // For password hashing
-const userService = require('./userService');
+const userService = require('../../services/user.service');
 
 // Render the registration page
 const getRegister = (req, res) => {

@@ -7,9 +7,9 @@ var hbs = require('hbs');
 var db = require('./config/db');
 require('dotenv').config({ path: 'dbconfig.env' })
 
-var homeRouter = require('./component/home/homeRoute');
-var userRouter = require('./component/user/userRoute');
-var productRouter = require('./component/product/productRoute');
+// var homeRouter = require('./component/home/homeRoute');
+// var userRouter = require('./component/user/userRoute');
+// var productRouter = require('./component/product/productRoute');
 
 const dbconfig = {
   url: process.env.DB_URL || ""
@@ -29,9 +29,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', homeRouter);
-app.use('/user', userRouter);
-app.use('/glasses', productRouter);
+//route
+app.use("", require("./routes"));
+
+// app.use('/', homeRouter);
+// app.use('/user', userRouter);
+// app.use('/glasses', productRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

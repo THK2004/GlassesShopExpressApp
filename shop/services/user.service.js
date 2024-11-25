@@ -1,4 +1,4 @@
-const user = require('../../models/userModel'); // Path to your user.js file
+const user = require('../models/userModel'); // Path to your user.js file
 
 async function saveUser(username, email, hashedPassword) {
     try {

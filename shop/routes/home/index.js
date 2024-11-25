@@ -1,5 +1,6 @@
+//Home router
 var express = require('express');
-var { getHome, getAbout, getContact, getShop } = require("./homeController");
+var { getHome, getAbout, getContact, getShop } = require("../../component/home/homeController");
 var router = express.Router();
 
 /* GET home page. */

@@ -1,5 +1,7 @@
+//product router
+
 var express = require('express');
-var { getGlasses, getProductDetail } = require("./productController");
+var { getGlasses, getProductDetail } = require("../../component/product/productController");
 var router = express.Router();
 
 /* GET glasses (product list) page. */

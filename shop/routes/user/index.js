@@ -1,5 +1,7 @@
+//user router
+
 var express = require('express');
-var { getRegister, postRegister, getLogin  } = require("./userController");
+var { getRegister, postRegister, getLogin  } = require("../../component/user/userController");
 var router = express.Router();
 
 /* GET login page. */

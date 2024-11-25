@@ -1,6 +1,6 @@
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const { createProductDocument } = require('../../models/productModel');
-
+// const { createProductDocument } = require('../../models/productModel');
+const { createProductDocument } = require('../models/productModel');
 require('dotenv').config({ path: 'dbconfig.env' })
 const dbconfig = {
   url: process.env.DB_URL || ""

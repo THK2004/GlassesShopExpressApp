@@ -1,6 +1,5 @@
 const productsModel = require('../../models/productModel');
-const productsService = require('./productService');
-
+const productsService = require('../../services/product.service');
 const getGlasses = async (req, res) => {
     try {
         const products = await productsService.getProduct();
