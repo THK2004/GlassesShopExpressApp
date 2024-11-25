@@ -13,9 +13,9 @@
     <div class="sf-container"> <!-- Search and filter -->
         <div class="sf">
             <h3 id="search-filter">Search for products</h3>
-            <input type="text" id="search" placeholder="Enter product name or description" title="Type in">
-            <button class="sf-button" type="button" onclick="searchProducts()">Search</button>
-
+            <form action="/glasses" method="GET">
+                <input type="text" value="" name="search" id="search" placeholder="Press enter to search">
+            </form>
             <h2 id="sof">OR</h2>
             <h3 id="search-filter">Filter by </h3>
             
@@ -57,7 +57,7 @@
                             <option value="over1000">$500++</option>
                         </select>
                     </div>
-                    <button class="sf-button" type="submit">Filter</button> <!-- Filter submission -->
+                    <button class="sf-button" type="submit" onclick="filterProducts()">Filter</button> <!-- Filter submission -->
                 </div>
             </form>
         </div>
