@@ -43,7 +43,7 @@ async function getProduct() {
   }
 }
 
-async function filterProducts({ brand, material, priceRange, sex, searchQuery }) {
+async function filterProducts({ brand, material, priceRange, sex, search }) {
   try {
     // Connect to the database
     await client.connect();
@@ -74,10 +74,10 @@ async function filterProducts({ brand, material, priceRange, sex, searchQuery })
     }
 
     // Add search query for name or description
-    if (searchQuery) {
+    if (search) {
       query.$or = [
-        { name: { $regex: searchQuery, $options: 'i' } },  // Case-insensitive search for name
-        { description: { $regex: searchQuery, $options: 'i' } }  // Case-insensitive search for description
+        { name: { $regex: search, $options: 'i' } },  // Case-insensitive search for name
+        { description: { $regex: search, $options: 'i' } }  // Case-insensitive search for description
       ];
     }
 
