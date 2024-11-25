@@ -43,56 +43,59 @@ async function getProduct() {
   }
 }
 
-async function filterProducts({ brand, material, priceRange, sex, name, des}) {
+async function filterProducts({ brand, material, priceRange, sex, searchQuery }) {
   try {
-      // Connect to the database
-      await client.connect();
-      const database = client.db("products");
-      const collection = database.collection("products");
+    // Connect to the database
+    await client.connect();
+    const database = client.db("products");
+    const collection = database.collection("products");
 
-      // Build the query object dynamically based on filter parameters
-      const query = {};
+    // Build the query object dynamically based on filter parameters
+    const query = {};
 
-      if (brand) {
-          query.brand = brand;
+    if (brand) {
+      query.brand = brand;
+    }
+
+    if (material) {
+      query.material = material;
+    }
+
+    if (sex) {
+      query.sex = sex;
+    }
+
+    if (priceRange) {
+      if (priceRange === 'under500') {
+        query.price = { $lte: 500 };
+      } else if (priceRange === 'over500') {
+        query.price = { $gte: 500 };
       }
+    }
 
-      if (material) {
-          query.material = material;
-      }
+    // Add search query for name or description
+    if (searchQuery) {
+      query.$or = [
+        { name: { $regex: searchQuery, $options: 'i' } },  // Case-insensitive search for name
+        { description: { $regex: searchQuery, $options: 'i' } }  // Case-insensitive search for description
+      ];
+    }
 
-      if (sex) {
-          query.sex = sex;
-      }
+    // Fetch the filtered products from the database
+    const productsData = await collection.find(query).toArray();
 
-      if (priceRange) {
-          if (priceRange === 'under500') {
-              query.price = { $lte: 500 };
-          } else if (priceRange === 'over500') {
-              query.price = { $gte: 500 };
-          }
-      }
+    // Map to desired document format (if needed)
+    const products = productsData.map(createProductDocument);
 
-      if (name) {
-        query.name = {$regex: name, $options: 'i'};
-      }
-      if (des){
-        query.description = {$regex: des, $options: 'i'};
-      }
-      // Fetch the filtered products from the database
-      const productsData = await collection.find(query).toArray();
-
-      // Map to desired document format (if needed)
-      const products = productsData.map(createProductDocument);
-
-      return products;
+    return products;
   } catch (error) {
-      console.error("Error filtering products:", error);
-      return [];
+    console.error("Error filtering products:", error);
+    return [];
   } finally {
-      await client.close();
+    await client.close();
   }
 }
+
 
 
 // Export the function

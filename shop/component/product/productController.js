@@ -3,7 +3,7 @@ const productsService = require('./productService');
 const getGlasses = async (req, res) => {
     try {
         // Get the filter parameters from the query string
-        const { brand, material, price, sex, name, des } = req.query;
+        const { brand, material, price, sex,searchQuery } = req.query;
 
         // Build filterParams object to pass to the service
         const filterParams = {
@@ -11,8 +11,7 @@ const getGlasses = async (req, res) => {
             material: material || null,
             priceRange: price || null,
             sex: sex || null,
-            name: name || '',
-            des: des || '',
+            searchQuery: searchQuery||null,
         };
 
         // Log the filter parameters to see what is being passed
