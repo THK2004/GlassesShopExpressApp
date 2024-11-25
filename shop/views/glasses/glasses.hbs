@@ -10,24 +10,69 @@
             </div>
         </div>
     </div>
-    <div class="search-container">
-        <div class="sc">
-            <input type="text" id="search" placeholder="Enter product name" title="Type in">
+    <div class="sf-container"> <!-- Search and filter -->
+        <div class="sf">
+            <h3 id="search-filter">Search for products</h3>
+            <input type="text" id="search" placeholder="Enter product name or description" title="Type in">
+            <button class="sf-button" type="button" onclick="searchProducts()">Search</button>
+
+            <h2 id="sof">OR</h2>
+            <h3 id="search-filter">Filter by </h3>
+            
+            <!-- Filter form -->
+            <form action="/glasses" method="GET">
+                <div class="filter-box">
+                    <div id="brand-filter">
+                        <select name="brand" id="brands">
+                            <option value="" selected disabled>Select brand</option>
+                            <option value="Doir">Doir</option>
+                            <option value="Guchi">Guchi</option>
+                            <option value="Balenxetayga">Balenxetayga</option>
+                            <option value="Doll & Banana">Doll & Banana</option>
+                            <option value="Channel">Channel</option>
+                            <option value="Luon Vuituoi">Luon Vuituoi</option>
+                        </select>
+                    </div>
+                    <div id="material-filter">
+                        <select name="material" id="material">
+                            <option value="" selected disabled>Select material</option>
+                            <option value="Titan">Titan</option>
+                            <option value="Plastic">Plastic</option>
+                            <option value="Stainless steel">Stainless steel</option>
+                            <option value="Carbon">Carbon</option>
+                        </select>
+                    </div>
+                    <div id="sex-filter">
+                        <select name="sex" id="sex">
+                            <option value="" selected disabled>Select gender</option>
+                            <option value="Men">Male</option>
+                            <option value="Women">Female</option>
+                            <option value="Unisex">Unisex</option>
+                        </select>
+                    </div>
+                    <div id="price-filter">
+                        <select name="price" id="price">
+                            <option value="" selected disabled>Select price range</option>
+                            <option value="under500">$0-500</option>
+                            <option value="over1000">$500++</option>
+                        </select>
+                    </div>
+                    <button class="sf-button" type="submit">Filter</button> <!-- Filter submission -->
+                </div>
+            </form>
         </div>
     </div>
+
+    <!-- Displaying filtered products -->
     <div class="container-fluid">
         <div class="row">
             {{#each products}}
             <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
                 <div class="glasses_box">
-                    <div class="glasses-image-container">
-                        <img src=/{{image}} alt="#" />
-                    </div>
+                    <figure><img src=/{{image}} alt="#"/></figure>
                     <h3><span class="blu">$</span>{{price}}</h3>
                     <p>{{name}}</p>
-                    <div class="des">
-                        {{limit description 200}}
-                    </div>
+                    <div class="des">{{description}}</div>
                     <div class="view">
                         <a href="glasses/{{id}}">View more</a> 
                     </div>
