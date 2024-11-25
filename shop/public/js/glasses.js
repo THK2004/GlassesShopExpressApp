@@ -1,34 +1,30 @@
-function filterProducts() {
+function filterProducts(event) {
+    event.preventDefault(); // Prevent default form submission
+
     const brand = document.getElementById("brands").value;
     const material = document.getElementById("material").value;
     const sex = document.getElementById("sex").value;
     const price = document.getElementById("price").value;
-    const searchQuery=document.getElementById("search").value;
-    const filterValues = {
-        brands: brand || null,
-        material: material || null,
-        sex: sex || null,
-        price: price || null,
-        name: searchQuery ||null,
-        des: searchQuery ||null,
-    };
+    const searchQuery = document.getElementById("search").value;
 
-    console.log("Selected filter values:", filterValues);
+    // Build query string dynamically
+    const params = new URLSearchParams({
+        brand: brand || '',
+        material: material || '',
+        sex: sex || '',
+        price: price || '',
+        search: searchQuery || '',
+    });
 
-    // Send the filter values to the backend API
-    fetch('http://localhost:3001/products/', { 
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(filterValues),
+    // Send a GET request with query parameters
+    fetch(`http://localhost:3001/products?${params.toString()}`, {
+        method: 'GET',
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Filtered products:', data)
+        console.log('Filtered products:', data);
     })
     .catch(error => {
         console.error('Error fetching filtered products:', error);
     });
 }
-
