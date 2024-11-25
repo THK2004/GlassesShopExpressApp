@@ -17,7 +17,7 @@ function filterProducts(event) {
     });
 
     // Send a GET request with query parameters
-    fetch(`http://localhost:3001/products?${params.toString()}`, {
+    fetch(`/products?${params.toString()}`, {
         method: 'GET',
     })
     .then(response => response.json())

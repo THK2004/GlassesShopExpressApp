@@ -69,7 +69,7 @@ async function filterProducts({ brand, material, priceRange, sex, searchQuery })
       if (priceRange === 'under500') {
         query.price = { $lte: 500 };
       } else if (priceRange === 'over500') {
-        query.price = { $gte: 1000 };
+        query.price = { $gte: 500 };
       }
     }
 
