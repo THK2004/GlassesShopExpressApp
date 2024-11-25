@@ -68,16 +68,16 @@ async function filterProducts({ brand, material, priceRange, sex, name, des}) {
       if (priceRange) {
           if (priceRange === 'under500') {
               query.price = { $lte: 500 };
-          } else if (priceRange === 'over500) {
+          } else if (priceRange === 'over500') {
               query.price = { $gte: 500 };
           }
       }
 
       if (name) {
-        query.name: {$regex: name, $options: 'i'};
+        query.name = {$regex: name, $options: 'i'};
       }
       if (des){
-        query.description: {$regex: des, $options: 'i'};
+        query.description = {$regex: des, $options: 'i'};
       }
       // Fetch the filtered products from the database
       const productsData = await collection.find(query).toArray();
