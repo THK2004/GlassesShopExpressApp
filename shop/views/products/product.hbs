@@ -5,15 +5,55 @@
                 <img src="/{{product.image}}" alt="#">
             </div>
             <div class="product_details col-8">
-                <h3>{{product.name}}</h3>
+                <h3>Name: {{product.name}}</h3>
                 <p>Price: ${{product.price}}</p>
-                <p>{{product.description}}</p>
+                <p>Description: {{product.description}}</p>
                 <p>Brand: {{product.brand}}</p>
                 <p>Material: {{product.material}}</p>
                 <p>Sex: {{product.sex}}</p>
                 <br>
                 <button onclick="add_to_cart()" class="add_to_cart">Add to cart</button>
             </div>
+        </div>
+    </div>
+    <div class="container mt-5">
+        <h2>Same Brand Products</h2>
+        <div class="row">
+            {{#each sameProductsBrand}}
+            <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+                <div class="card">
+                    <div class="card-image-container">
+                        <img src="/{{this.image}}" class="card-img-top" alt="{{this.name}}">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{this.name}}</h5>
+                        <p class="card-text">Material: {{this.material}}</p>
+                        <p class="card-text">Price: ${{this.price}}</p>
+                        <a href="/glasses/{{this.id}}" class="btn btn-primary">View Product</a>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+    <div class="container mt-5">
+        <h2>Other related products you might like</h2>
+        <div class="row">
+            {{#each randomProduct}}
+            <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+                <div class="card">
+                    <div class="card-image-container">
+                        <img src="/{{this.image}}" class="card-img-top" alt="{{this.name}}">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{this.name}}</h5>
+                        <p class="card-text">Material: {{this.material}}</p>
+                        <p class="card-text">Price: ${{this.price}}</p>
+                        <a href="/glasses/{{this.id}}" class="btn btn-primary">View Product</a>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
         </div>
     </div>
 </div>

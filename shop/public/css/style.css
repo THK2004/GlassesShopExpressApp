@@ -524,6 +524,10 @@ button {
      color: grey !important;
 }
 
+/** end Our  Glasses section **/
+
+/** Product details **/
+
 .product_info_container {
      display: flex;
      align-items: center;
@@ -537,9 +541,23 @@ button {
      display: flex;
      width: 90%;
 }
-   
+
+.glasses-image-container {
+     height: 135px;
+     overflow: hidden;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+ }
+ 
+.glasses-image-container img {
+     max-width: 100%;
+     max-height: 100%;
+     object-fit: contain;
+}
+
 .product_image img {
-     width: 100%; /* Adjust based on your preferred image size */
+     width: 100%;
 }
    
 .product_details {
@@ -566,9 +584,21 @@ button {
      background-color: #218838; /* Darker green on hover */
 }
 
+.card-image-container {
+     height: 150px;
+     overflow: hidden;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+}
+ 
+.card-image-container img {
+     max-width: 100%;
+     max-height: 100%;
+     object-fit: contain;
+}
 
-/** end Our  Glasses section **/
-
+/** End Product details **/
 
 /** Our shop section **/
 
@@ -929,7 +959,7 @@ ul.location_icon li a {
 
 #search{
      position: relative;
-     margin-left: 15px
+     margin-left: 15px;
      margin-bottom: 20px;
      padding: 10px;
      border-radius: 20px;
