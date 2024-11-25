@@ -927,10 +927,70 @@ ul.location_icon li a {
      margin-bottom: 90px;
 }
 
-#search{
-     position: relative;
-     margin-left: 15px
+.sf {
+     text-align: center; 
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+     align-items: center;
      margin-bottom: 20px;
+ }
+ 
+ #search-filter {
+     font-size: 24px;
+     margin-bottom: 10px;
+     font-weight: bold;
+     color:#8c8a8a;
+ }
+ 
+ #search{
      padding: 10px;
      border-radius: 20px;
-}
+     border: 1px solid #ccc;
+     width: 300px; 
+     text-align: center;
+     margin-bottom: 10px; 
+ }
+
+ #sof {
+     font-size: 50px;
+     margin-bottom: 10px;
+     margin-top: 10px;
+     font-family: sans-serif;
+     color: #ccc;
+ }
+
+ .filter-box {
+     display: flex;
+     justify-content: space-between; /* Space items evenly */
+     align-items: center; /* Align items vertically centered */
+     width: 100%; /* Ensure the container takes up full width */
+     max-width: 800px; /* Optional: Limit the maximum width */
+     margin-top: 10px;
+ }
+ 
+ .filter-box > div {
+     width: 22%; /* Ensure filter boxes don't stretch too wide */
+ }
+ 
+ select {
+     width: 100%;
+     padding: 8px;
+     border-radius: 5px;
+     border: 1px solid #ccc;
+ }
+
+ .sf-button {
+     border-color: #03cafc; 
+     padding: 10px 20px;
+     background-color: white;  
+     color: #03cafc;  
+     border-radius: 8px;  
+     cursor: pointer;  
+ }
+
+ .sf-button:hover {
+     background-color: #03cafc;      
+     color: white; 
+ }
+ 

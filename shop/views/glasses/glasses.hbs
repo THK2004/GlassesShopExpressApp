@@ -10,11 +10,56 @@
             </div>
         </div>
     </div>
-    <div class="search-container">
-        <div class="sc">
-            <input type="text" id="search" placeholder="Enter product name" title="Type in">
+        <div class="sf-container"> <!--Search and filter-->
+            <div class="sf">
+                <h3 id="search-filter">Search for products</h3> <!-- Changed the ID here -->
+                <input type="text" id="search" placeholder="Enter product name or description" title="Type in">
+                <button class="sf-button" type="button" onclick="searchProdutcts()">Search</button>
+                <h2 id="sof">OR</h2>
+                <h3 id="search-filter">Filter by </h3>
+                <div class="filter-box">    
+            <div id="brand-filter">
+                <select name="brands" id="brands">
+                    <option value="" selected disabled>Select brand</option>
+                    <option value="Doir">Doir</option>
+                    <option value="Guchi">Guchi</option>
+                    <option value="Balenxetayga">Balenxetayga</option>
+                    <option value="Doll & Banana">Doll & Banana</option>
+                    <option value="Channel">Channel</option>
+                    <option value="Luon Vuituoi">Luon Vuituoi</option>
+                </select>
+            </div>
+            <div id="material-filter">
+                <select name="material" id="material"> <!-- Fixed id here -->
+                    <option value="" selected disabled>Select material</option>
+                    <option value="Titan">Titan</option>
+                    <option value="Plastic">Plastic</option>
+                    <option value="Stainless steel">Stainless steel</option>
+                    <option value="Carbon">Carbon</option>
+                </select>
+            </div>
+            <div id="sex-filter">
+                <select name="sex" id="sex"> <!-- Fixed id here -->
+                    <option value="" selected disabled>Select gender</option>
+                    <option value="Men">Male</option>
+                    <option value="Women">Female</option>
+                    <option value="Unisex">Unisex</option>
+                </select>
+            </div>
+            <div id="price-filter">
+                <select name="price" id="price"> <!-- Fixed id here -->
+                    <option value="" selected disabled>Select price range</option>
+                    <option value="under500">$0-500</option>
+                    <option value="over1000">$500++</option>
+                </select>
+            </div>
+            <button class="sf-button" type="button" onclick="filterProducts()">Filter</button> <!--Filter submission-->
         </div>
+
+
     </div>
+</div>
+
     <div class="container-fluid">
         <div class="row">
             {{#each products}}

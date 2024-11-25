@@ -43,6 +43,15 @@ async function getProduct() {
   }
 }
 
+async function filterProducts({}) {
+  try{
+    await client.connect();
+    const database = client.db("products");
+    const collection = database.collection("products");
+
+  }
+}
+
 // Export the function
 module.exports = {
   getProduct,
