@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+const session = require('express-session');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -30,6 +31,15 @@ hbs.registerHelper('limit', function (text, limit) {
   return text;
 });
 
+
+app.use(session({
+  secret: 'qwertyuiop',  // Replace with a strong secret key
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set to true if using HTTPS
+}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
