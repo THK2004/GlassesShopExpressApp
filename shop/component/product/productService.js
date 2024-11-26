@@ -105,8 +105,78 @@ async function filterProducts({ brand, material, priceRange, sex, search }) {
   }
 }
 
+async function getProductById(productId) {
+  try {
+    // Get your database and collection
+    const database = await getDatabase();
+    const collection = database.collection("products");
+
+    // Fetch a single document by its ID
+    const productData = await collection.findOne({ _id: productId });
+
+    if (!productData) {
+      console.warn(`Product with id ${productId} not found`);
+      return null; // Return null if no product is found
+    }
+
+    // Map the document to the desired format
+    const product = createProductDocument(productData);
+
+    return product; // Return the formatted product
+  } catch (error) {
+    console.error("Error fetching product by ID:", error);
+    return null; // Return null in case of an error
+  }
+}
+
+async function getSameBranchProduct(brand, excludeProductId) {
+  try {
+    // Get your database and collection
+    const database = await getDatabase();
+    const collection = database.collection("products");
+
+    // Fetch same branch product excluding the current one from the collection
+    const productsData = await collection.find({ brand, _id: { $ne: excludeProductId } }).toArray();
+
+    // Map the documents to the desired format
+    const products = productsData.map(createProductDocument);
+
+    return products; // Return the products array
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return []; // Return an empty array in case of an error
+  }
+}
+
+async function getRandomProducts(excludedIds, count) {
+  try {
+    // Get your database and collection
+    const database = await getDatabase();
+    const collection = database.collection("products");
+
+    // Fetch same branch product excluding the current one from the collection
+    const productsData = await collection
+      .aggregate([
+          { $match: { _id: { $nin: excludedIds } } }, // Exclude these IDs
+          { $sample: { size: count } }, // Get a random sample of products
+      ])
+      .toArray();
+
+    // Map the documents to the desired format
+    const products = productsData.map(createProductDocument);
+
+    return products; // Return the products array
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return []; // Return an empty array in case of an error
+  }
+}
+
 // Export the function
 module.exports = {
   getProduct,
   filterProducts,
+  getProductById,
+  getSameBranchProduct,
+  getRandomProducts
 };
