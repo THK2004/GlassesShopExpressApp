@@ -14,26 +14,22 @@ const getGlasses = async (req, res) => {
             search: search||null,
         };
 
-        // Log the filter parameters to see what is being passed
-        // console.log('Filter Params:', filterParams);
+        const areAllParamsNull = Object.values(filterParams).every(value => value === null);
 
         // Get the filtered products from the service
-        const products = await productsService.filterProducts(filterParams);
 
-        // Log the filtered products
-        // console.log('Filtered Products:', products);
+        const products = areAllParamsNull
+            ? await productsService.getProduct(filterParams) // No filters
+            : await productsService.filterProducts(filterParams); // With filters
 
-        // Pass both the filtered products and the filterParams back to the view
-        res.render('glasses/glasses', { glasses: true, products, filterParams });
+        // Pass the products back to the view to display
+        res.render('glasses/glasses', { glasses: true, products});
     } catch (error) {
         console.error('Error fetching filtered products:', error);
         res.status(500).send('Internal Server Error');
     }
 };
 
-
-
-  
 const getProductDetail = async (req, res) => {
     try {
         const products = await productsService.getProduct();

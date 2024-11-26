@@ -18,13 +18,36 @@ const client = new MongoClient(uri, {
   },
 });
 
+async function getDatabase() {
+  if (!client) {
+    await client.connect();
+  }
+  return client.db("products");
+}
+
+// Attach signal handlers for graceful shutdown
+process.on("SIGINT", async () => {
+  if (client) {
+      console.log("Closing MongoDB connection...");
+      await client.close();
+      console.log("MongoDB connection closed.");
+      process.exit(0);
+  }
+});
+
+process.on("SIGTERM", async () => {
+  if (client) {
+      console.log("Closing MongoDB connection...");
+      await client.close();
+      console.log("MongoDB connection closed.");
+      process.exit(0);
+  }
+});
+
 async function getProduct() {
   try {
-    // Connect the client to the server
-    await client.connect();
-
-    // Select your database and collection
-    const database = client.db("products");
+    // Get your database and collection
+    const database = await getDatabase();
     const collection = database.collection("products");
 
     // Fetch all documents from the collection
@@ -37,33 +60,21 @@ async function getProduct() {
   } catch (error) {
     console.error("Error fetching data:", error);
     return []; // Return an empty array in case of an error
-  } finally {
-    // Close the connection
-    await client.close();
   }
 }
 
 async function filterProducts({ brand, material, priceRange, sex, search }) {
   try {
     // Connect to the database
-    await client.connect();
-    const database = client.db("products");
+    const database = await getDatabase();
     const collection = database.collection("products");
 
     // Build the query object dynamically based on filter parameters
     const query = {};
 
-    if (brand) {
-      query.brand = brand;
-    }
-
-    if (material) {
-      query.material = material;
-    }
-
-    if (sex) {
-      query.sex = sex;
-    }
+    if (brand) query.brand = brand;
+    if (material) query.material = material;
+    if (sex) query.sex = sex;
 
     if (priceRange) {
       if (priceRange === 'under500') {
@@ -91,12 +102,8 @@ async function filterProducts({ brand, material, priceRange, sex, search }) {
   } catch (error) {
     console.error("Error filtering products:", error);
     return [];
-  } finally {
-    await client.close();
   }
 }
-
-
 
 // Export the function
 module.exports = {
