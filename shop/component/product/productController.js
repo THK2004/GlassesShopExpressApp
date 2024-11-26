@@ -19,7 +19,7 @@ const getGlasses = async (req, res) => {
         // Get the filtered products from the service
 
         const products = areAllParamsNull
-            ? await productsService.getProduct(filterParams) // No filters
+            ? await productsService.getProduct() // No filters
             : await productsService.filterProducts(filterParams); // With filters
 
         // Pass the products back to the view to display
