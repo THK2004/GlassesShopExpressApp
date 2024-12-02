@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs'); // For password hashing
 const userService = require('./userService');
+const passport = require('passport');
 // Render the registration page
 const getRegister = (req, res) => {
   res.render('register/register', { register: true });
@@ -39,39 +40,64 @@ const getLogin = (req, res) => {
 }
 
 // Handle login form submission
-const postLogin = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    console.log("this email", email);
+// const postLogin = async (req, res) => {
+//   try {
+//     const { email, password } = req.body;
+//     console.log("this email", email);
 
-    // Find the user by email
-    const user = await userService.findUserByEmail(email);
+//     // Find the user by email
+//     const user = await userService.findUserByEmail(email);
+
+//     if (!user) {
+//       return res.status(400).json({ success: false, message: 'Invalid email or password' });
+//     }
+
+//     // Compare the password with the hashed password
+//     const isPasswordValid = await bcrypt.compare(password, user.password);
+
+//     if (!isPasswordValid) {
+//       return res.status(400).json({ success: false, message: 'Invalid email or password' });
+//     }
+
+//     // Save user details in the session
+//     req.session.user = { id: user._id, email: user.email }; // This line should work now
+
+//     // Respond with success
+//     res.status(200).json({ success: true, message: 'Login successful!' });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ success: false, message: error.message });
+//   }
+// };
+
+// const getCart = (req, res) => {
+//   res.render('cart/cart', {cart: true});
+// }
+const postLogin = (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    if (err) {
+      console.error('Error during authentication:', err);
+      return next(err); // Forward the error
+    }
 
     if (!user) {
-      return res.status(400).json({ success: false, message: 'Invalid email or password' });
+      // Authentication failed
+      return res.status(400).json({ success: false, message: info.message });
     }
 
-    // Compare the password with the hashed password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    // Establish session for the user
+    req.logIn(user, (err) => {
+      if (err) {
+        console.error('Error during login:', err);
+        return next(err);
+      }
 
-    if (!isPasswordValid) {
-      return res.status(400).json({ success: false, message: 'Invalid email or password' });
-    }
-
-    // Save user details in the session
-    req.session.user = { id: user._id, email: user.email }; // This line should work now
-
-    // Respond with success
-    res.status(200).json({ success: true, message: 'Login successful!' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: error.message });
-  }
+      // Login successful, respond with success
+      return res.status(200).json({ success: true, message: 'Login successful!', user });
+    });
+  })(req, res, next); // Invoke the Passport middleware
 };
 
-const getCart = (req, res) => {
-  res.render('cart/cart', {cart: true});
-}
 
 module.exports = {
   getRegister,

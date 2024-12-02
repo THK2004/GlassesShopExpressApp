@@ -4,6 +4,8 @@ const session = require('express-session');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var passport = require('./config/db/passport');
+var MongoStore = require('connect-mongo');
 var hbs = require('hbs');
 var db = require('./config/db');
 var cors = require('cors');
@@ -31,13 +33,6 @@ hbs.registerHelper('limit', function (text, limit) {
   return text;
 });
 
-
-app.use(session({
-  secret: 'qwertyuiop',  // Replace with a strong secret key
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false } // Set to true if using HTTPS
-}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(logger('dev'));
@@ -45,6 +40,25 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(session({
+  secret: 'qwertyuiop',  // Replace with a strong secret key
+  resave: false,
+  saveUninitialized: true,
+  store: new MongoStore({
+    mongoUrl: dbconfig.url,
+    collectionName: 'session'
+  }),
+  cookie: { secure: false } // Set to true if using HTTPS
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.post('/login', passport.authenticate('local', {
+  successRedirect: '/',
+  failureRedirect: '/login',
+}));
+//app.use(passport.authenticate('session'));
 
 app.use('/', homeRouter);
 app.use('/user', userRouter);
