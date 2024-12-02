@@ -888,6 +888,11 @@ button {
 
 /** end contact section **/
 
+/** Cart section **/
+#checkout-button {
+     margin-bottom: 20px;
+ }
+ 
 
 /** footer **/
 

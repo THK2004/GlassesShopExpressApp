@@ -69,11 +69,14 @@ const postLogin = async (req, res) => {
   }
 };
 
-
+const getCart = (req, res) => {
+  res.render('cart/cart', {cart: true});
+}
 
 module.exports = {
   getRegister,
   postRegister,
   getLogin,
   postLogin,
+  getCart
 };
