@@ -1,7 +1,7 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcryptjs');
-const userService = require('./userService'); // Import your user service
+const userService = require('../../component/user/userService'); // Import your user service
 
 // Configure Local Strategy
 passport.use(
@@ -38,7 +38,7 @@ passport.serializeUser((user, done) => {
 // Deserialize user from the session
 passport.deserializeUser(async (id, done) => {
   try {
-    const user = await userService.findUserById(id); // Retrieve the full user object
+    const user = await userService.findUserByEmail(id); // Retrieve the full user object
     done(null, user);
   } catch (error) {
     done(error);

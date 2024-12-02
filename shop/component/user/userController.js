@@ -78,7 +78,7 @@ const postLogin = (req, res, next) => {
     if (err) {
       console.error('Error during authentication:', err);
       return next(err); // Forward the error
-    }
+    } 
 
     if (!user) {
       // Authentication failed
@@ -104,5 +104,5 @@ module.exports = {
   postRegister,
   getLogin,
   postLogin,
-  getCart
+  //getCart
 };

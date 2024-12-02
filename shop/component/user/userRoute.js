@@ -1,5 +1,5 @@
 var express = require('express');
-var { getRegister, postRegister, getLogin, postLogin, getCart  } = require("./userController");
+var { getRegister, postRegister, getLogin, postLogin/*, getCart*/  } = require("./userController");
 var router = express.Router();
 
 /* GET login page. */
@@ -15,6 +15,6 @@ router.post('/register', postRegister);
 router.post('/login', postLogin);
 
 // GET cart page
-router.get('/cart', getCart);
+//router.get('/cart', getCart);
 
 module.exports = router;

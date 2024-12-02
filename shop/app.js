@@ -7,6 +7,7 @@ var logger = require('morgan');
 var passport = require('./config/db/passport');
 var MongoStore = require('connect-mongo');
 var hbs = require('hbs');
+var mongoose = require('mongoose');
 var db = require('./config/db');
 var cors = require('cors');
 require('dotenv').config({ path: 'dbconfig.env' })
@@ -35,22 +36,23 @@ hbs.registerHelper('limit', function (text, limit) {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(session({
+  secret: 'qwertyuiop',  // Replace with a strong secret key
+  resave: false,
+  saveUninitialized: true,
+  store: MongoStore.create({
+    mongoUrl: dbconfig.url,
+    collectionName: 'session'
+  }),
+  cookie: { secure: false } // Set to true if using HTTPS
+}));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(session({
-  secret: 'qwertyuiop',  // Replace with a strong secret key
-  resave: false,
-  saveUninitialized: true,
-  store: new MongoStore({
-    mongoUrl: dbconfig.url,
-    collectionName: 'session'
-  }),
-  cookie: { secure: false } // Set to true if using HTTPS
-}));
+
 app.use(passport.initialize());
 app.use(passport.session());
 
