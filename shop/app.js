@@ -1,9 +1,15 @@
 var createError = require('http-errors');
 var express = require('express');
 const session = require('express-session');
+const passport = require('passport');
+require('./config/passport')(passport); // Load Passport config
+
+
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var MongoStore = require('connect-mongo');
+
 var hbs = require('hbs');
 var db = require('./config/db');
 var cors = require('cors');
@@ -36,8 +42,23 @@ app.use(session({
   secret: 'qwertyuiop',  // Replace with a strong secret key
   resave: false,
   saveUninitialized: true,
+  store: MongoStore.create({
+    mongoUrl: dbconfig.url,
+    collectionName: 'sessions'
+  }),
   cookie: { secure: false } // Set to true if using HTTPS
 }));
+
+
+// Initialize Passport and session
+app.use(passport.initialize());
+app.use(passport.session());
+app.use((req, res, next) => {
+  res.locals.user = req.user || null; // Passport.js provides req.user if authenticated
+  next();
+});
+
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(logger('dev'));
@@ -46,6 +67,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//routers
 app.use('/', homeRouter);
 app.use('/user', userRouter);
 app.use('/glasses', productRouter);

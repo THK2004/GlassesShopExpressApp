@@ -34,12 +34,28 @@
                                 <li class="nav-item" {{#if contact}}active{{/if}}>
                                     <a class="nav-link" href="/home/contact">Contact Us</a>
                                 </li>
-                                <li class="nav-item d_none login_btn {{#if login}}active{{/if}}">
+                                {{!-- <li class="nav-item d_none login_btn {{#if login}}active{{/if}}">
+                                    <a class="nav-link" href="/user/login">Login</a>
+                                </li>
+                                <li class="nav-item d_none {{#if register}}active{{/if}}">
+                                    <a class="nav-link" href="/user/register">Register</a>
+                                </li> --}}
+                                 <!-- Conditionally render login/register or user/logout -->
+                                {{#if user}}
+                                <li class="nav-item">
+                                    <span class="nav-link">Hello, {{user.username}}</span>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-red-500 hover:text-red-700" href="/user/logout">Logout</a>
+                                </li>
+                                {{else}}
+                                <li class="nav-item d_none {{#if login}}active{{/if}}">
                                     <a class="nav-link" href="/user/login">Login</a>
                                 </li>
                                 <li class="nav-item d_none {{#if register}}active{{/if}}">
                                     <a class="nav-link" href="/user/register">Register</a>
                                 </li>
+                                {{/if}}
                                 <li class="nav-item d_none sea_icon">
                                     <a class="nav-link" href="#"><i class="fa fa-shopping-bag" aria-hidden="true"></i><i class="fa fa-search" aria-hidden="true"></i></a>
                                 </li>
