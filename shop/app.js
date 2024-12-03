@@ -8,7 +8,6 @@ require('./config/passport')(passport); // Load Passport config
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
 var MongoStore = require('connect-mongo');
 
 var hbs = require('hbs');
@@ -37,7 +36,16 @@ hbs.registerHelper('limit', function (text, limit) {
   }
   return text;
 });
-
+app.use(session({
+  secret: 'qwertyuiop',  // Replace with a strong secret key
+  resave: false,
+  saveUninitialized: true,
+  store: MongoStore.create({
+    mongoUrl: dbconfig.url,
+    collectionName: 'sessions'
+  }),
+  cookie: { secure: false } // Set to true if using HTTPS
+}));
 
 
 
@@ -59,19 +67,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-app.use(session({
-  secret: 'qwertyuiop',  // Replace with a strong secret key
-  resave: false,
-  saveUninitialized: true,
-  store: MongoStore.create({
-    mongoUrl: dbconfig.url,
-    collectionName: 'sessions'
-  }),
-  cookie: { secure: false } // Set to true if using HTTPS
-}));
-app.use(passport.authenticate('session'));
-
 
 //routers
 
