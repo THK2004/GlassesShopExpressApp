@@ -44,7 +44,22 @@ const getProductDetail = async (req, res) => {
     }
 };
 
+const getPaginatedProduct = async (req, res) =>{
+    try {
+        const { page = 1, limit = 4 } = req.query;
+    
+        // Fetch the paginated products
+        const { products, totalProducts } = await productsService.getPaginatedProducts(parseInt(page), parseInt(limit));
+
+        res.json({ glasses: true, products, totalProducts });
+    } catch (error) {
+        console.error('Error fetching paginated products:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
 module.exports = {
     getGlasses,
-    getProductDetail
+    getProductDetail,
+    getPaginatedProduct
 }

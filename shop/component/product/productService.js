@@ -172,11 +172,35 @@ async function getRandomProducts(excludedIds, count) {
   }
 }
 
+async function getPaginatedProducts(page = 1, limit = 4) {
+  try {
+    const database = await getDatabase();
+    const collection = database.collection("products");
+
+    // Calculate skip value
+    const skip = (page - 1) * limit;
+
+    // Fetch paginated products
+    const productsData = await collection.find().skip(skip).limit(limit).toArray();
+
+    // Count total number of products for pagination info
+    const totalProducts = await collection.countDocuments();
+
+    const products = productsData.map(createProductDocument);
+
+    return { products, totalProducts };
+  } catch (error) {
+    console.error("Error fetching paginated products:", error);
+    return { products: [], totalProducts: 0 };
+  }
+}
+
 // Export the function
 module.exports = {
   getProduct,
   filterProducts,
   getProductById,
   getSameBranchProduct,
-  getRandomProducts
+  getRandomProducts,
+  getPaginatedProducts
 };
