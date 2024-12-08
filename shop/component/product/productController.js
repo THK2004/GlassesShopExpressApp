@@ -2,30 +2,10 @@ const productsService = require('./productService');
 
 const getGlasses = async (req, res) => {
     try {
-        // Get the filter parameters from the query string
-        const { brand, material, price, sex, search } = req.query;
-
-        // Build filterParams object to pass to the service
-        const filterParams = {
-            brand: brand || null,
-            material: material || null,
-            priceRange: price || null,
-            sex: sex || null,
-            search: search||null,
-        };
-
-        const areAllParamsNull = Object.values(filterParams).every(value => value === null);
-
-        // Get the filtered products from the service
-
-        const products = areAllParamsNull
-            ? await productsService.getProduct() // No filters
-            : await productsService.filterProducts(filterParams); // With filters
-
-        // Pass the products back to the view to display
-        res.render('glasses/glasses', { glasses: true, products});
+        // Render view to display
+        res.render('glasses/glasses', { glasses: true });
     } catch (error) {
-        console.error('Error fetching filtered products:', error);
+        console.error('Error rendering products:', error);
         res.status(500).send('Internal Server Error');
     }
 };
@@ -44,22 +24,27 @@ const getProductDetail = async (req, res) => {
     }
 };
 
-const getPaginatedProduct = async (req, res) =>{
-    try {
-        const { page = 1, limit = 4 } = req.query;
-    
-        // Fetch the paginated products
-        const { products, totalProducts } = await productsService.getPaginatedProducts(parseInt(page), parseInt(limit));
+const getPaginatedAndFilteredProduct = async (req, res) => {
+    const { page = 1, limit = 4, brand, material, price, sex, search } = req.query;
 
-        res.json({ glasses: true, products, totalProducts });
+    // Build filters from query parameters
+    const filters = {brand, material, priceRange: price, sex, search};
+
+    try {
+        const { products, totalProducts } = await productsService.getPaginatedAndFilterProducts(parseInt(page), parseInt(limit), filters);
+
+        res.json({
+            products,
+            totalProducts,
+        });
     } catch (error) {
         console.error('Error fetching paginated products:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).send('Internal Server Error');
     }
-}
+};
 
 module.exports = {
     getGlasses,
     getProductDetail,
-    getPaginatedProduct
+    getPaginatedAndFilteredProduct
 }

@@ -6,18 +6,24 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentPage = 1;
   
     // Fetch products for the given page
-    async function fetchProducts(page) {
+    async function fetchProducts(page, filters = {}) {
         console.log("fetchProducts called for page:", page);
         try {
-            const response = await fetch(`glasses/api/products?page=${page}&limit=${limit}`);
+            const queryParams = new URLSearchParams({
+                page,
+                limit,
+                ...filters // Spread the filters to include them in the URL query string
+            });
+    
+            const response = await fetch(`glasses/api/products?${queryParams.toString()}`);
             const data = await response.json();
-
+    
             console.log("Fetched Data:", data); // Debug log
     
             if (response.ok) {
                 displayProducts(data.products);
-                setupPagination(data.totalProducts, page);
-                updateUrl(page);
+                setupPagination(data.totalProducts, page, filters);
+                updateUrl(page, filters);
             } else {
                 console.error("Error fetching products:", data.error);
             }
@@ -60,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     
     // Set up pagination controls
-    function setupPagination(totalProducts, currentPage) {
+    function setupPagination(totalProducts, currentPage, filters) {
         paginationControls.innerHTML = ""; // Clear current controls
     
         const totalPages = Math.ceil(totalProducts / limit);
@@ -75,22 +81,47 @@ document.addEventListener("DOMContentLoaded", function () {
             }
     
             button.addEventListener("click", () => {
-                fetchProducts(i);
+                fetchProducts(i, filters); // Pass the filters to the fetch function
             });
     
             paginationControls.appendChild(button);
         }
     }
-
-    // Update URL in the address bar without reloading the page
-    function updateUrl(page) {
+    
+    // Update URL with filter parameters
+    function updateUrl(page, filters) {
         const searchParams = new URLSearchParams(window.location.search);
         searchParams.set('page', page); // Set the page number in the URL
-
+    
+        // Set other filters in the URL
+        Object.keys(filters).forEach(key => {
+            if (filters[key]) {
+                searchParams.set(key, filters[key]);
+            }
+        });
+    
         // Update the URL without reloading the page
         window.history.pushState(null, '', `${window.location.pathname}?${searchParams.toString()}`);
     }
     
     // Initial fetch for page 1
     fetchProducts(currentPage);
+
+
+    // Add filter form
+    const filterForm = document.querySelector('form');
+
+    filterForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const filters = {
+            search: document.getElementById('search').value,
+            brand: document.getElementById('brands').value,
+            material: document.getElementById('material').value,
+            sex: document.getElementById('sex').value,
+            price: document.getElementById('price').value
+        };
+
+        fetchProducts(1, filters); // Fetch with filters and page 1
+    });
 });

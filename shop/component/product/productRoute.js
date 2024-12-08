@@ -1,5 +1,5 @@
 var express = require('express');
-var { getGlasses, getProductDetail, getPaginatedProduct } = require("./productController");
+var { getGlasses, getProductDetail, getPaginatedAndFilteredProduct } = require("./productController");
 var router = express.Router();
 
 /* GET glasses (product list) page. */
@@ -9,6 +9,6 @@ router.get('/', getGlasses);
 router.get('/:id', getProductDetail);
 
 /* Route for API call */
-router.get('/api/products', getPaginatedProduct);
+router.get('/api/products', getPaginatedAndFilteredProduct);
 
 module.exports = router;

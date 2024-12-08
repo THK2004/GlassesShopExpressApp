@@ -44,6 +44,7 @@ process.on("SIGTERM", async () => {
   }
 });
 
+/*
 async function getProduct() {
   try {
     // Get your database and collection
@@ -62,7 +63,9 @@ async function getProduct() {
     return []; // Return an empty array in case of an error
   }
 }
+*/
 
+/*
 async function filterProducts({ brand, material, priceRange, sex, search }) {
   try {
     // Connect to the database
@@ -104,6 +107,7 @@ async function filterProducts({ brand, material, priceRange, sex, search }) {
     return [];
   }
 }
+*/
 
 async function getProductById(productId) {
   try {
@@ -172,19 +176,47 @@ async function getRandomProducts(excludedIds, count) {
   }
 }
 
-async function getPaginatedProducts(page = 1, limit = 4) {
+async function getPaginatedAndFilterProducts(page = 1, limit = 4, filters = {}) {
   try {
     const database = await getDatabase();
     const collection = database.collection("products");
 
-    // Calculate skip value
+    // Calculate skip value for pagination
     const skip = (page - 1) * limit;
 
-    // Fetch paginated products
-    const productsData = await collection.find().skip(skip).limit(limit).toArray();
+    // Build filter criteria based on filters received
+    const filterCriteria = {};
+
+    if (filters.search) {
+      const searchRegex = new RegExp(filters.search, 'i');  // Case-insensitive search
+      filterCriteria.name = { $regex: searchRegex };
+    }
+    
+    if (filters.brand) {
+      filterCriteria.brand = filters.brand;
+    }
+
+    if (filters.material) {
+      filterCriteria.material = filters.material;
+    }
+
+    if (filters.sex) {
+      filterCriteria.sex = filters.sex;
+    }
+
+    if (filters.priceRange) {
+      if (filters.priceRange === 'under500') {
+        filterCriteria.price = { $lt: 500 };
+      } else if (filters.priceRange === 'over500') {
+        filterCriteria.price = { $gte: 500 };
+      }
+    }
+
+    // Fetch paginated and filtered products
+    const productsData = await collection.find(filterCriteria).skip(skip).limit(limit).toArray();
 
     // Count total number of products for pagination info
-    const totalProducts = await collection.countDocuments();
+    const totalProducts = await collection.countDocuments(filterCriteria);
 
     const products = productsData.map(createProductDocument);
 
@@ -197,10 +229,10 @@ async function getPaginatedProducts(page = 1, limit = 4) {
 
 // Export the function
 module.exports = {
-  getProduct,
-  filterProducts,
+  //getProduct,
+  //filterProducts,
   getProductById,
   getSameBranchProduct,
   getRandomProducts,
-  getPaginatedProducts
+  getPaginatedAndFilterProducts
 };
