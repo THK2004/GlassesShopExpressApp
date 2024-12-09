@@ -90,19 +90,23 @@ document.addEventListener("DOMContentLoaded", function () {
     
     // Update URL with filter parameters
     function updateUrl(page, filters) {
-        const searchParams = new URLSearchParams(window.location.search);
-        searchParams.set('page', page); // Set the page number in the URL
+        // Initialize a new URLSearchParams instance to overwrite the current query parameters
+        const searchParams = new URLSearchParams();
     
-        // Set other filters in the URL
+        // Add the page parameter
+        searchParams.set('page', page);
+    
+        // Add the active filters to the query parameters
         Object.keys(filters).forEach(key => {
             if (filters[key]) {
                 searchParams.set(key, filters[key]);
             }
         });
     
-        // Update the URL without reloading the page
+        // Update the browser's URL without reloading the page
         window.history.pushState(null, '', `${window.location.pathname}?${searchParams.toString()}`);
     }
+    
     
     // Initial fetch for page 1
     fetchProducts(currentPage);
@@ -112,16 +116,23 @@ document.addEventListener("DOMContentLoaded", function () {
     const filterForm = document.querySelector('form');
 
     filterForm.addEventListener('submit', function (event) {
-        event.preventDefault();
-
+        event.preventDefault(); // Prevent form submission
+    
+        // Collect the filters from the form inputs
         const filters = {
-            search: document.getElementById('search').value,
+            search: document.getElementById('search').value.trim(),
             brand: document.getElementById('brands').value,
             material: document.getElementById('material').value,
             sex: document.getElementById('sex').value,
             price: document.getElementById('price').value
         };
-
-        fetchProducts(1, filters); // Fetch with filters and page 1
-    });
+    
+        // Remove empty filters from the object
+        const activeFilters = Object.fromEntries(
+            Object.entries(filters).filter(([key, value]) => value) // Keep only non-empty values
+        );
+    
+        // Fetch products with the filters applied, starting from page 1
+        fetchProducts(1, activeFilters);
+    });    
 });

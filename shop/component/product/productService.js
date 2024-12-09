@@ -184,26 +184,34 @@ async function getPaginatedAndFilterProducts(page = 1, limit = 4, filters = {}) 
     // Calculate skip value for pagination
     const skip = (page - 1) * limit;
 
-    // Build filter criteria based on filters received
+    // Build filter criteria dynamically based on filters
     const filterCriteria = {};
 
+    // Apply search across name and description
     if (filters.search) {
-      const searchRegex = new RegExp(filters.search, 'i');  // Case-insensitive search
-      filterCriteria.name = { $regex: searchRegex };
+      const searchRegex = new RegExp(filters.search, 'i'); // Case-insensitive search
+      filterCriteria.$or = [
+        { name: { $regex: searchRegex } },
+        { description: { $regex: searchRegex } }
+      ];
     }
-    
+
+    // Apply brand filter
     if (filters.brand) {
       filterCriteria.brand = filters.brand;
     }
 
+    // Apply material filter
     if (filters.material) {
       filterCriteria.material = filters.material;
     }
 
+    // Apply gender filter
     if (filters.sex) {
       filterCriteria.sex = filters.sex;
     }
 
+    // Apply price range filter
     if (filters.priceRange) {
       if (filters.priceRange === 'under500') {
         filterCriteria.price = { $lt: 500 };
@@ -213,19 +221,27 @@ async function getPaginatedAndFilterProducts(page = 1, limit = 4, filters = {}) 
     }
 
     // Fetch paginated and filtered products
-    const productsData = await collection.find(filterCriteria).skip(skip).limit(limit).toArray();
+    const productsData = await collection
+      .find(filterCriteria) // Apply filters
+      .skip(skip) // Apply pagination offset
+      .limit(limit) // Apply pagination limit
+      .toArray();
 
-    // Count total number of products for pagination info
+    // Count total number of products matching the filter for pagination info
     const totalProducts = await collection.countDocuments(filterCriteria);
 
+    // Map to desired document format (if necessary)
     const products = productsData.map(createProductDocument);
 
+    // Return paginated products and total count
     return { products, totalProducts };
   } catch (error) {
-    console.error("Error fetching paginated products:", error);
+    console.error("Error fetching paginated and filtered products:", error);
     return { products: [], totalProducts: 0 };
   }
 }
+
+
 
 // Export the function
 module.exports = {

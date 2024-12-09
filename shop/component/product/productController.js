@@ -2,8 +2,9 @@ const productsService = require('./productService');
 
 const getGlasses = async (req, res) => {
     try {
+        const { products, totalProducts } = await productsService.getPaginatedAndFilterProducts(1, 4, {});
         // Render view to display
-        res.render('glasses/glasses', { glasses: true });
+        res.render('glasses/glasses', { glasses: true, products });
     } catch (error) {
         console.error('Error rendering products:', error);
         res.status(500).send('Internal Server Error');
