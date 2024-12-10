@@ -3,8 +3,24 @@ document.addEventListener("DOMContentLoaded", function () {
     const paginationControls = document.getElementById("pagination-controls");
   
     const limit = 4; // Products per page
-    let currentPage = 1;
-  
+
+    // Helper function to get query parameters from the URL
+    function getQueryParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return {
+            page: parseInt(urlParams.get("page") || 1), // Default to 1 if page is not set
+            brand: urlParams.get("brand") || "",
+            material: urlParams.get("material") || "",
+            sex: urlParams.get("sex") || "",
+            price: urlParams.get("price") || "",
+            search: urlParams.get("search") || ""
+        };
+    }
+
+    // Extract current page and filters from the URL
+    const { page, ...filters } = getQueryParams();
+    let currentPage = page; // Initialize with the page from URL
+
     // Fetch products for the given page
     async function fetchProducts(page, filters = {}) {
         console.log("fetchProducts called for page:", page);
@@ -107,11 +123,6 @@ document.addEventListener("DOMContentLoaded", function () {
         window.history.pushState(null, '', `${window.location.pathname}?${searchParams.toString()}`);
     }
     
-    
-    // Initial fetch for page 1
-    fetchProducts(currentPage);
-
-
     // Add filter form
     const filterForm = document.querySelector('form');
 
@@ -134,5 +145,8 @@ document.addEventListener("DOMContentLoaded", function () {
     
         // Fetch products with the filters applied, starting from page 1
         fetchProducts(1, activeFilters);
-    });    
+    });
+
+    // Initial fetch for the current page
+    fetchProducts(currentPage, filters);
 });
