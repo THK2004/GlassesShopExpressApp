@@ -125,7 +125,6 @@ async function getProductById(productId) {
 
     // Map the document to the desired format
     const product = createProductDocument(productData);
-
     return product; // Return the formatted product
   } catch (error) {
     console.error("Error fetching product by ID:", error);
