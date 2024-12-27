@@ -10,6 +10,8 @@ module.exports = {
       image: productData.image || 'images/default.png',
       sex: productData.sex || 'Unknown',
       status: productData.status,
+      stock: productData.stock,
+      date: productData.createDate,
     };
   },
 };
