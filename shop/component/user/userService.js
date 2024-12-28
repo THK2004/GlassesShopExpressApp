@@ -49,5 +49,15 @@ async function findUserByEmail(email) {
         throw error; // Propagate the error for handling in the controller
     }
   }
-
-module.exports = { saveUser, findUserByEmail, };
+  async function findUserByUsername(username) {
+    try {
+      const database = client.db("test");
+      const users = database.collection("users");
+      const foundUser = await users.findOne({ username });
+      return foundUser; // Return the user document or null
+    } catch (error) {
+      console.error('Error finding user by username:', error);
+      throw error;
+    }
+  }
+module.exports = { saveUser, findUserByEmail,findUserByUsername };

@@ -49,37 +49,6 @@ const getLogin = (req, res) => {
   res.render('login/login', {login: true});
 }
 
-// Handle login form submission
-// const postLogin = async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
-//     console.log("this email", email);
-
-//     // Find the user by email
-//     const user = await userService.findUserByEmail(email);
-
-//     if (!user) {
-//       return res.status(400).json({ success: false, message: 'Invalid email or password' });
-//     }
-
-//     // Compare the password with the hashed password
-//     const isPasswordValid = await bcrypt.compare(password, user.password);
-
-//     if (!isPasswordValid) {
-//       return res.status(400).json({ success: false, message: 'Invalid email or password' });
-//     }
-
-//     // Save user details in the session
-//     req.session.user = { id: user._id, email: user.email }; // This line should work now
-
-//     // Respond with success
-//     res.status(200).json({ success: true, message: 'Login successful!' });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ success: false, message: error.message });
-//   }
-// };
-
 const postLogin = (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     if (err) {
@@ -128,6 +97,32 @@ const getlogout = (req, res) => {
     });
   });
 };
+// AJAX endpoint for checking username/email availability
+const checkAvailability = async (req, res) => {
+  const { username, email } = req.body;
+  try {
+    let usernameExists = false;
+    let emailExists = false;
+
+    if (username) {
+      usernameExists = await userService.findUserByUsername(username);
+    }
+
+    if (email) {
+      emailExists = await userService.findUserByEmail(email);
+    }
+
+    res.json({
+      usernameAvailable: !usernameExists,
+      emailAvailable: !emailExists,
+    });
+  } catch (error) {
+    console.error('Error checking availability:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
 
 module.exports = {
   getRegister,
@@ -135,5 +130,6 @@ module.exports = {
   getLogin,
   postLogin,
   getCart,
-  getlogout
+  getlogout,
+  checkAvailability
 };

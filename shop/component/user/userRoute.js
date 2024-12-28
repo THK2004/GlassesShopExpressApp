@@ -1,6 +1,6 @@
 var express = require('express');
 
-var { getRegister, postRegister, getLogin, postLogin, getCart, getlogout } = require("./userController");
+var { getRegister, postRegister, getLogin, postLogin, getCart, getlogout, checkAvailability } = require("./userController");
 const { ensureAuthenticated } = require('../../middleware/auth');
 
 var router = express.Router();
@@ -21,4 +21,7 @@ router.post('/login', postLogin);
 router.get('/cart', ensureAuthenticated, getCart);
 
 router.get('/logout', getlogout);
+
+router.post('/check-availability', checkAvailability);
+
 module.exports = router;

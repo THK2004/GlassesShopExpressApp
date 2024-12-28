@@ -2,18 +2,12 @@
     <div class="container mx-auto">
         <div class="flex justify-center">
             <!-- Image container -->
-            <div class="relative w-full max-w-xs md:max-w-md md:mr-4"> 
-                <img
-                    src="/images/flower.jpg"
-                    alt="img"
-                    class="w-full h-auto rounded-r-2xl object-cover" 
-                />
-                <div
-                    class="absolute bottom-10 right-6 p-4 bg-white bg-opacity-30 backdrop-blur-sm rounded drop-shadow-lg"
-                >
+            <div class="relative w-full max-w-xs md:max-w-md md:mr-4">
+                <img src="/images/flower.jpg" alt="img" class="w-full h-auto rounded-r-2xl object-cover" />
+                <div class="absolute bottom-10 right-6 p-4 bg-white bg-opacity-30 backdrop-blur-sm rounded drop-shadow-lg">
                     <span class="text-black text-lg">
-                    "We've been using Untitle to kick<br />start every new project
-                    and can't <br />imagine working without it."
+                        "We've been using Untitle to kick<br />start every new project
+                        and can't <br />imagine working without it."
                     </span>
                 </div>
             </div>
@@ -25,6 +19,7 @@
                     <div class="mb-4">
                         <label for="email" class="block text-gray-600 mb-2">Email</label>
                         <input type="email" id="email" name="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-indigo-500" placeholder="Enter your email" required>
+                        <small id="emailFeedback" class="text-sm"></small>
                     </div>
                     <div class="mb-6">
                         <label for="password" class="block text-gray-600 mb-2">Password</label>
@@ -54,3 +49,33 @@
         </div>
     </div>
 </section>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $('#email').on('blur', function () {
+      const email = $(this).val().trim();
+      if (email === '') {
+        $('#emailFeedback').text('Please enter an email address').css('color', 'red');
+        return;
+      }
+
+      $.ajax({
+        url: '/user/check-availability',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ email }),
+        success: function (response) {
+          const emailFeedback = $('#emailFeedback');
+          if (response.emailAvailable) {
+            emailFeedback.text('Email is available').css('color', 'green');
+          } else {
+            emailFeedback.text('Email is already registered').css('color', 'red');
+          }
+        },
+        error: function () {
+          $('#emailFeedback').text('Error checking email availability. Please try again later.').css('color', 'red');
+        },
+      });
+    });
+  });
+</script>
