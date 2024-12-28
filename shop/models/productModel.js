@@ -12,6 +12,7 @@ module.exports = {
       status: productData.status,
       stock: productData.stock,
       date: productData.createDate,
+      sales: productData.sales,
     };
   },
 };

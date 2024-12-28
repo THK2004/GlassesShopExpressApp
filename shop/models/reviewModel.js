@@ -1,7 +1,7 @@
 module.exports = {
     createReviewDocument(reviewData){
         return{
-            id: reviewData._id,
+            id: reviewData.id,
             content: reviewData.content,
             userid: reviewData.userid,
             product: reviewData.productid,
