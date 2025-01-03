@@ -1,27 +1,8 @@
-// module.exports = {
-//   createProductDocument(productData) {
-//     return {
-//       id: productData._id,
-//       name: productData.name || 'Unknown Product',
-//       description: productData.description || 'No description available',
-//       price: productData.price ? productData.price.toString() : '0',
-//       brand: productData.brand || 'Unknown Brand',
-//       material: productData.material || 'Unknown Material',
-//       image: productData.image || 'images/default.png',
-//       sex: productData.sex || 'Unknown',
-//       stock: productData.stock,
-//       sales: productData.sales,
-//       rating: productData.rating,
-//       status: productData.status, 
-//     };
-//   },
-// };
-
 const mongoose = require('mongoose');
 mongoose.pluralize(null);
 
 const productModel = new mongoose.Schema({
-  'productid': {
+  'productId':{
     type: String,
     required: true,
     unique: true,
@@ -45,6 +26,10 @@ const productModel = new mongoose.Schema({
   'material': {
     type: String,
     required: true,
+  },
+  'image': {
+    type: String,
+    required: false,
   },
   'sex': {
     type: String,

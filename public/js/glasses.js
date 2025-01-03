@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
                 <div class="glasses_box">
                     <div class="glasses-image-container">
-                        <img src="/${product.image}" alt="#" />
+                        <img src="${product.image}" alt="#" />
                     </div>
                     <h3><span class="blu">$</span>${product.price}</h3>
                     <p>${product.name}</p>
@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         ${truncateDescription(product.description, 200)}
                     </div>
                     <div class="view">
-                        <a href="glasses/${product.id}">View more</a>
+                        <a href="glasses/${product.productId}">View more</a>
                     </div>
                 </div>
             </div>`;
@@ -125,7 +125,10 @@ document.addEventListener("DOMContentLoaded", function () {
     
     // Add filter form
     const filterForm = document.querySelector('form');
-
+    if (!filterForm) {
+        console.log("Filter form not found");
+        return;
+    }
     filterForm.addEventListener('submit', function (event) {
         event.preventDefault(); // Prevent form submission
     
