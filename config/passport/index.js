@@ -4,6 +4,8 @@ const bcrypt = require('bcryptjs');
 const User = require('../../models/userModel');
 console.log('GOOGLE_CLIENT_ID:', process.env.GOOGLE_CLIENT_ID);
 console.log('GOOGLE_CLIENT_SECRET:', process.env.GOOGLE_CLIENT_SECRET);
+require('dotenv').config({ path: 'dbconfig.env' })
+
 module.exports = (passport) => {
   // Local Strategy for authentication
   passport.use(
@@ -33,10 +35,9 @@ module.exports = (passport) => {
   passport.use(
     new GoogleStrategy(
       {
-        // clientID: process.env.GOOGLE_CLIENT_ID,
-        // clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        clientID: "717459030999-ifv6e1jf38jcl322bg9q83ll660752e6.apps.googleusercontent.com",
-        clientSecret: "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",
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        
         callbackURL: '/auth/google/callback', // Adjust as needed
       },
       async (accessToken, refreshToken, profile, done) => {
