@@ -5,10 +5,11 @@ const Schema = mongoose.Schema;
 // Define the user schema
 const userSchema = new Schema(
   {
+    
     username: {
       type: String,
       required: true,
-      unique: true,
+      unique: false,
       trim: true,
     },
     email: {
@@ -27,6 +28,25 @@ const userSchema = new Schema(
     googleId: {
       type: String, // Store the Google ID for users who log in via Google
     },
+    role:{
+        type: String,
+        required: false,
+        enum: ['admin', 'user'],
+    },
+    permission:{
+        type: String,
+        required: false,
+        enum: ['accounts','orders','products'],
+    },
+    status: {
+      type: String,
+      required: false,
+      enum: ['banned','active'],
+    },
+    cart: {
+        type: Object,
+        required: false,
+    }
   },
   {
     timestamps: true, // Automatically add `createdAt` and `updatedAt` fields

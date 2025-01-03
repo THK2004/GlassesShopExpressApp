@@ -53,25 +53,26 @@ const getLogin = (req, res) => {
 const postLogin = (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     if (err) {
-      // Render login page with error message
+      console.error('Authentication error:', err);
       return res.status(500).render('login/login', { 
-        errorMessage: 'An error occurred' 
+        login: true, 
+        errorMessage: 'An unexpected error occurred. Please try again.' 
       });
     }
     if (!user) {
-      // Render login page with invalid credentials message
       return res.status(400).render('login/login', { 
-        errorMessage: info.message 
+        login: true, 
+        errorMessage: info.message || 'Invalid email or password.' 
       });
     }
     req.login(user, (err) => {
       if (err) {
-        // Render login page with login failed message
+        console.error('Login error:', err);
         return res.status(500).render('login/login', { 
-          errorMessage: 'Login failed' 
+          login: true, 
+          errorMessage: 'Login failed. Please try again.' 
         });
       }
-      // Redirect to dashboard or homepage after successful login
       return res.redirect('/home/about');
     });
   })(req, res, next);

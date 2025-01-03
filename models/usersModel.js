@@ -7,15 +7,11 @@ const usersModel = new mongoose.Schema({
         type: String,
         required: true,
     },
-    'userid':{
-        type: String,
-        required: true,
-        unique,
-    },
+
     'email': {
         type: String,
         required: true,
-        unique,
+        unique: true,
     },
     'password': {
         type: String,
