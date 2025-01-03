@@ -125,7 +125,10 @@ document.addEventListener("DOMContentLoaded", function () {
     
     // Add filter form
     const filterForm = document.querySelector('form');
-
+    if (!filterForm) {
+        console.log("Filter form not found");
+        return;
+    }
     filterForm.addEventListener('submit', function (event) {
         event.preventDefault(); // Prevent form submission
     
