@@ -39,14 +39,16 @@ const getGlasses = async (req, res) => {
 const getProductDetail = async (req, res) => {
     try {
         const productId = req.params.id;
+        
         const product = await productsService.getProductById(productId);
         const sameProductsBrand = await productsService.getSameBranchProduct(product.brand, productId);
-        const excludedIds = [productId, ...sameProductsBrand.map(p => p.id)];
+        const excludedIds = [productId, ...sameProductsBrand.map(p => p.productId)];
         const randomProduct = await productsService.getRandomProducts(excludedIds, 4);
 
         res.render('products/product', { glasses: true, product, sameProductsBrand, randomProduct });
     } catch (error) {
         console.error('Error fetching product:', error);
+        res.status(500).send('Internal Server Error');
     }
 };
 
