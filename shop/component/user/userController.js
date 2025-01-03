@@ -1,6 +1,7 @@
 const passport = require('passport'); 
 const bcrypt = require('bcryptjs'); // For password hashing
 const userService = require('./userService');
+
 // Render the registration page
 const getRegister = (req, res) => {
   res.render('register/register', { register: true });

@@ -14,13 +14,15 @@ var hbs = require('hbs');
 var db = require('./config/db');
 var cors = require('cors');
 require('dotenv').config({ path: 'dbconfig.env' })
-
+console.log("Loaded Environment Variables:", process.env);
 var homeRouter = require('./component/home/homeRoute');
 var userRouter = require('./component/user/userRoute');
 var productRouter = require('./component/product/productRoute');
 
 const dbconfig = {
   url: process.env.DB_URL || ""
+
+  
 }
 db.connect(dbconfig.url);
 
@@ -73,6 +75,22 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', homeRouter);
 app.use('/user', userRouter);
 app.use('/glasses', productRouter);
+app.use("/auth", userRouter);
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+// Callback route for Google to redirect to
+app.get(
+    '/auth/google/callback',
+    (req, res, next) => {
+      console.log('Google callback route hit!');
+      next();
+    },
+    passport.authenticate('google', { failureRedirect: '/user/login' }),
+    (req, res) => {
+      console.log('Authentication successful');
+      res.redirect('/home/about');
+    }
+  );
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

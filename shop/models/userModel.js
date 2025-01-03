@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 // Define the user schema
-const user = new Schema(
+const userSchema = new Schema(
   {
     username: {
       type: String,
@@ -20,7 +20,12 @@ const user = new Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: function () {
+        return !this.googleId; // Only require password if not a Google user
+      },
+    },
+    googleId: {
+      type: String, // Store the Google ID for users who log in via Google
     },
   },
   {
@@ -28,4 +33,4 @@ const user = new Schema(
   }
 );
 
-module.exports = mongoose.model('user', user);
+module.exports = mongoose.model('User', userSchema);
