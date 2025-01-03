@@ -1,36 +1,52 @@
 const mongoose = require('mongoose');
+mongoose.pluralize(null);
 
-const Schema = mongoose.Schema;
+const usersModel = new mongoose.Schema({
+    'username': {
+        type: String,
+        required: true,
+    },
+    
+    'email': {
+        type: String,
+        required: true,
+        unique,
+    },
+    'password': {
+        type: String,
+        required: function(){
+            return !this.googleId;
+        
+        },
+    },
+    'googleId': {
+        type: String,
+    },
+    'role':{
+        type: String,
+        required: false,
+        enum: ['admin', 'user'],
+        default: 'user',
+    },
+    'permission':{
+        type: [String],
+        required: false,
+       
+    },
+    'status':{
+        type: String,
+        required: false,
+        enum: ['banned','active'],
+        default: 'active',
+    },
+    'cart':{
+        type: Object,
+        required: false,
+    }
+},
+{
+    timestamps: true,
+}
+)
 
-// Define the user schema
-const userSchema = new Schema(
-  {
-    username: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
-    },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-      lowercase: true,
-      trim: true,
-    },
-    password: {
-      type: String,
-      required: function () {
-        return !this.googleId; // Only require password if not a Google user
-      },
-    },
-    googleId: {
-      type: String, // Store the Google ID for users who log in via Google
-    },
-  },
-  {
-    timestamps: true, // Automatically add `createdAt` and `updatedAt` fields
-  }
-);
-
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('users', usersModel, 'users');
