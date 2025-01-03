@@ -1,6 +1,5 @@
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const user = require('../../models/userModel'); // Path to your user.js file
-const users = require('../../models/usersModel'); // Path to your user.js file
 require('dotenv').config({ path: 'dbconfig.env' })
 const dbconfig = {
   url: process.env.DB_URL || ""
