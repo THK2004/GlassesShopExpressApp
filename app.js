@@ -28,9 +28,12 @@ db.connect(dbconfig.url);
 
 var app = express();
 
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
+
+
 hbs.registerPartials(__dirname + '/views/partials', function (err) {});
 hbs.registerHelper('limit', function (text, limit) {
   if (text && text.length > limit) {

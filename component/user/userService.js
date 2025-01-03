@@ -19,16 +19,22 @@ const client = new MongoClient(uri, {
 
 async function saveUser(username, email, hashedPassword, options = {}) {
   try {
+    // Check if email already exists
+    const existingUser = await user.findOne({ email });
+    if (existingUser) {
+      throw new Error(`Duplicate email: ${email} is already in use.`);
+    }
+
     // Create a new user object
     const newUser = new user({
       username,
       email,
-      password: hashedPassword, // Will be null for Google users
-      googleId: options.googleId || null, // Optional: Google ID for Google users
-      role: options.role || 'user', // Default to 'user' if not provided
-      permission: options.permission || null, // Optional: Permission level
-      status: options.status || 'active', // Default to 'active' if not provided
-      cart: options.cart || {}, // Default to an empty object if not provided
+      password: hashedPassword,
+      googleId: options.googleId || null,
+      role: options.role || 'user',
+      permission: options.permission || null,
+      status: options.status || 'active',
+      cart: options.cart || {},
     });
 
     // Save the user to the database
@@ -37,14 +43,7 @@ async function saveUser(username, email, hashedPassword, options = {}) {
     console.log('User saved successfully:', newUser);
     return newUser; // Return the saved user object
   } catch (error) {
-    console.error('Error saving user:', error);
-
-    // If it's a validation error, log details
-    if (error.name === 'ValidationError') {
-      for (const field in error.errors) {
-        console.error(`Validation error in ${field}:`, error.errors[field].message);
-      }
-    }
+    console.error('Error saving user:', error.message);
     throw error; // Propagate the error for handling elsewhere
   }
 }

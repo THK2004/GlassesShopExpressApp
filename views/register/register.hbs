@@ -86,6 +86,7 @@
     </div>
 </section>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
   $(document).ready(function () {
     // Check username availability
@@ -96,30 +97,19 @@
         return;
       }
 
-      $.ajax({
-        url: '/user/check-availability',
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({ username }),
-        success: function (response) {
-          const usernameFeedback = $('#usernameFeedback');
-          if (response.usernameAvailable) {
-            usernameFeedback.text('Username is available').css('color', 'green');
-          } else {
-            usernameFeedback.text('Username is already taken').css('color', 'red');
-          }
-        },
-        error: function () {
-          $('#usernameFeedback').text('Error checking username availability. Please try again.').css('color', 'red');
-        },
-      });
+      // Add any additional username validation here if needed
     });
 
-    // Check email availability
+    // Check email availability and format
     $('#email').on('blur', function () {
       const email = $(this).val().trim();
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (email === '') {
         $('#emailFeedback').text('Please enter an email address').css('color', 'red');
+        return;
+      }
+      if (!emailPattern.test(email)) {
+        $('#emailFeedback').text('Please enter a valid email address').css('color', 'red');
         return;
       }
 

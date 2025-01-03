@@ -1,7 +1,7 @@
 const passport = require('passport'); 
 const bcrypt = require('bcryptjs'); // For password hashing
 const userService = require('./userService');
-
+const User = require('../../models/userModel');
 // Render the registration page
 const getRegister = (req, res) => {
   res.render('register/register', { register: true });
@@ -12,15 +12,23 @@ const postRegister = async (req, res) => {
   try {
     const { username, email, password, confirmPassword } = req.body;
 
+    // Check if the email format is correct
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      return res.status(400).render('register/register', {
+        register: true,
+        errorMessage: 'Please enter a valid email address.'
+      });
+    }
     // Check if the email already exists
-    const user = await userService.findUserByEmail(email);
+    const user = await User.findOne({ email: email });
     if (user) {
       return res.status(400).render('register/register', {
         register: true,
         errorMessage: 'Email already exists.'
       });
     }
-
+    
     // Validate password confirmation
     if (password !== confirmPassword) {
       return res.status(400).render('register/register', {
@@ -28,13 +36,13 @@ const postRegister = async (req, res) => {
         errorMessage: 'Passwords do not match.'
       });
     }
-
+    
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-
+    
     // Save the user to the database
     await userService.saveUser(username, email, hashedPassword);
-
+    
     // Redirect to home page or login page
     res.redirect('/user/login'); // Adjust the route as needed
   } catch (error) {
