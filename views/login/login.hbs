@@ -1,62 +1,95 @@
-<section id="login-form" class="login_section py-12 bg-gray-100 ">
-    <div class="container mx-auto">
-        <div class="flex justify-center">
-            <!-- Image container -->
-            <div class="relative w-full max-w-xs md:max-w-md md:mr-4">
-                <img src="/images/flower.jpg" alt="img" class="w-full h-auto rounded-r-2xl object-cover" />
-                <div class="absolute bottom-10 right-6 p-4 bg-white bg-opacity-30 backdrop-blur-sm rounded drop-shadow-lg">
-                    <span class="text-black text-lg">
-                        "We've been using Untitle to kick<br />start every new project
-                        and can't <br />imagine working without it."
-                    </span>
-                </div>
-            </div>
-
-            <!-- Form container -->
-            <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
-                <h2 class="text-2xl font-bold text-center text-gray-700 mb-6">Login</h2>
-                <form action="/user/login" method="POST">
-                    <div class="mb-4">
-                        <label for="email" class="block text-gray-600 mb-2">Email</label>
-                        <input type="email" id="email" name="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-indigo-500" placeholder="Enter your email" required>
-                        <small id="emailFeedback" class="text-sm"></small>
-                    </div>
-                    <div class="mb-6">
-                        <label for="password" class="block text-gray-600 mb-2">Password</label>
-                        <input type="password" id="password" name="password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-indigo-500" placeholder="Enter your password" required>
-                    </div>
-                    <!-- Error Message -->
-                    {{#if errorMessage}}
-                    <div class="mb-6">
-                        <span class="text-xs text-red-700 bg-red-100 w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-indigo-500"></span>
-                        {{errorMessage}}
-                    </div>
-                    {{/if}}
-
-                    <button type="submit" class="w-full bg-black text-white p-2 rounded-lg mb-6 hover:bg-gray-500 hover:text-black hover:border hover:border-gray-300">
-                        Login
-                    </button>
-                    <button class="w-full border border-gray-300 text-md p-2 rounded-lg mb-6 hover:bg-black hover:text-white">
-                        <img src="/images/google.svg" alt="img" class="w-6 h-6 inline mr-2" />
-                        Sign in with Google
-                    </button>
-                    <div class="text-center text-gray-400">
-                        Don't have an account?
-                        <a href="/user/register" class="font-bold text-black hover:text-indigo-600">Sign up for free!</a>
-                    </div>
-                </form>
-            </div>
-        </div>
+<section id="login-form" class="login_section py-12 bg-gray-100">
+  <div class="container mx-auto flex flex-col md:flex-row items-center justify-center">
+    <!-- Image container -->
+    <div class="relative w-full max-w-xs md:max-w-md md:mr-4 mb-6 md:mb-0">
+      <img src="/images/flower.jpg" alt="img" class="w-full h-auto rounded-r-2xl object-cover" />
+      <div class="absolute bottom-10 right-6 p-4 bg-white bg-opacity-30 backdrop-blur-sm rounded drop-shadow-lg">
+        <span class="text-black text-lg">
+          "We've been using Untitle to kick<br />start every new project and can't <br />imagine working without it."
+        </span>
+      </div>
     </div>
+
+    <!-- Form container -->
+    <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-bold text-center text-gray-700 mb-6">Login</h2>
+
+      <!-- Error Message Section -->
+      {{#if errorMessage}}
+      <div class="p-2 mb-4 text-sm text-red-700 bg-red-100 border border-red-300 rounded-md">
+        <strong>Error:</strong> {{errorMessage}}
+      </div>
+      {{/if}}
+
+      <form action="/user/login" method="POST" id="loginForm">
+        <div class="mb-4">
+          <label for="email" class="block text-gray-600 mb-2">Email <span class="text-red-500">*</span></label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-indigo-500"
+            placeholder="Enter your email"
+            required
+            autofocus
+          />
+          <small id="emailFeedback" class="text-sm"></small>
+        </div>
+        <div class="mb-6">
+          <label for="password" class="block text-gray-600 mb-2">Password <span class="text-red-500">*</span></label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-indigo-500"
+            placeholder="Enter your password"
+            required
+          />
+        </div>
+
+        <a
+          href="/user/auth/google"
+          class="w-full flex items-center justify-center border border-gray-300 text-md p-2 rounded-lg mb-6 hover:bg-black hover:text-white"
+        >
+          <img src="/images/google.svg" alt="Google Icon" class="w-6 h-6 inline mr-2" />
+          Sign in with Google
+        </a>
+
+        <button
+          type="submit"
+          class="w-full bg-indigo-500 text-white py-2 rounded-lg hover:bg-indigo-600 focus:outline-none"
+        >
+          Login
+        </button>
+        <div class="text-center mt-4">
+          <a href="/user/register" class="font-bold text-black hover:text-indigo-600">
+            Don't have an account? Register
+          </a>
+        </div>
+      </form>
+
+      <!-- Loading Indicator -->
+      <div id="loadingIndicator" class="hidden text-center mt-4">
+        <div class="spinner-border animate-spin inline-block w-6 h-6 border-4 rounded-full text-indigo-500"></div>
+        <p class="text-gray-600 mt-2">Processing...</p>
+      </div>
+    </div>
+  </div>
 </section>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   $(document).ready(function () {
+    // Real-time email validation
     $('#email').on('blur', function () {
       const email = $(this).val().trim();
+      const emailFeedback = $('#emailFeedback');
       if (email === '') {
-        $('#emailFeedback').text('Please enter an email address').css('color', 'red');
-        return;
+        emailFeedback.text('Please enter your email address').css('color', 'red');
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        emailFeedback.text('Invalid email format').css('color', 'red');
+      } else {
+        emailFeedback.text('');
       }
 
       $.ajax({
@@ -67,15 +100,38 @@
         success: function (response) {
           const emailFeedback = $('#emailFeedback');
           if (response.emailAvailable) {
-            emailFeedback.text('Email is available').css('color', 'green');
+            emailFeedback.text('Email is not available').css('color', 'red');
           } else {
-            emailFeedback.text('Email is already registered').css('color', 'red');
+            emailFeedback.text('Email is available').css('color', 'green');
           }
         },
         error: function () {
-          $('#emailFeedback').text('Error checking email availability. Please try again later.').css('color', 'red');
+          $('#emailFeedback').text('Error checking username availability. Please try again.').css('color', 'red');
         },
       });
+    });
+
+    // Real-time password validation
+    $('#password').on('blur', function () {
+      const password = $(this).val().trim();
+      if (password === '') {
+        alert('Please enter your password.');
+      }
+    });
+    
+
+    // Prevent form submission if there are validation issues
+    $('#loginForm').on('submit', function (e) {
+      const email = $('#email').val().trim();
+      const password = $('#password').val().trim();
+      const emailFeedback = $('#emailFeedback').text();
+
+      if (emailFeedback.includes('Invalid') || email === '' || password === '') {
+        e.preventDefault();
+        alert('Please fix errors before submitting');
+      } else {
+        $('#loadingIndicator').removeClass('hidden'); // Show spinner
+      }
     });
   });
 </script>

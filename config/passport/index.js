@@ -2,6 +2,8 @@ const LocalStrategy = require('passport-local').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const bcrypt = require('bcryptjs');
 const User = require('../../models/userModel');
+const userService = require('../../component/user/userService');
+require('dotenv').config({ path: 'dbconfig.env' })
 console.log('GOOGLE_CLIENT_ID:', process.env.GOOGLE_CLIENT_ID);
 console.log('GOOGLE_CLIENT_SECRET:', process.env.GOOGLE_CLIENT_SECRET);
 require('dotenv').config({ path: 'dbconfig.env' })
@@ -47,12 +49,16 @@ module.exports = (passport) => {
   
           if (!user) {
             // Create a new user
-            user = new User({
-              username: profile.displayName,
-              email: profile.emails[0].value,
+            // user = new User({
+            //   username: profile.displayName,
+            //   email: profile.emails[0].value,
+            //   googleId: profile.id,
+            // });
+            // await userService.saveUser(username, email, null);
+            await userService.saveUser(profile.displayName, profile.emails[0].value, null, {
               googleId: profile.id,
+              role: 'user',
             });
-            await user.save();
           }
   
           return done(null, user);
