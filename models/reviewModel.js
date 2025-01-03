@@ -14,11 +14,6 @@ const { applyTimestamps } = require('./usersModel');
 mongoose.pluralize(null);
 
 const reviewModel = new mongoose.Schema({
-    'revewid':{
-        type: String,
-        required: true,
-        unique: true,
-    },
 
     'userid':{
         type: String,
