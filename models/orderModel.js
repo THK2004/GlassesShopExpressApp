@@ -1,48 +1,23 @@
 const mongoose = require('mongoose');
 const schema = mongoose.Schema;
+mongoose.pluralize(null);
 
 const order = new schema({
-    orderId: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true,
+    'userid': {
+     type: String,
+     required: true,
     },
-    productId: {
-        type: String,
-        required: true,
-        trim: true,
+    'address': {
+     type: String,
+     required: true,
     },
-    userId: {
-        type: String,
-        required: true,
-        trim: true,
+    'status': {
+     type: String,
+     required: true,
+     enum: ['pending', 'shipped', 'delivered'],
     },
-    quantity: {
-        type: Number,
-        required: true,
+    'products': {
+     type: Object,
+     required: true,
     },
-    price: {
-        type: Number,
-        required: true,
-    },
-    address: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    orderDate: {
-        type: Date,
-        required: true,
-    },
-    status: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    address: {
-        type: String,
-        required: true,
-        trim: true,
-    }
 });

@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const schema = mongoose.Schema;
 mongoose.pluralize(null);
 
 const usersModel = new mongoose.Schema({
@@ -7,11 +6,7 @@ const usersModel = new mongoose.Schema({
         type: String,
         required: true,
     },
-    'userid':{
-        type: String,
-        required: true,
-        unique,
-    },
+    
     'email': {
         type: String,
         required: true,
@@ -31,16 +26,18 @@ const usersModel = new mongoose.Schema({
         type: String,
         required: false,
         enum: ['admin', 'user'],
+        default: 'user',
     },
     'permission':{
-        type: String,
+        type: [String],
         required: false,
-        enum: ['accounts','orders','products'],
+       
     },
     'status':{
         type: String,
         required: false,
         enum: ['banned','active'],
+        default: 'active',
     },
     'cart':{
         type: Object,
