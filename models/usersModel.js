@@ -34,18 +34,22 @@ const usersModel = new mongoose.Schema({
     },
     'permission':{
         type: String,
-        required: true,
+        required: false,
         enum: ['accounts','orders','products'],
     },
     'status':{
         type: String,
-        required: true,
+        required: false,
         enum: ['banned','active'],
     },
     'cart':{
         type: Object,
         required: false,
     }
-})
+},
+{
+    timestamps: true,
+}
+)
 
 module.exports = mongoose.model('users', usersModel, 'users');
