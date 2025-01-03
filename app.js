@@ -14,7 +14,7 @@ var hbs = require('hbs');
 var db = require('./config/db');
 var cors = require('cors');
 require('dotenv').config({ path: 'dbconfig.env' })
-console.log("Loaded Environment Variables:", process.env);
+// console.log("Loaded Environment Variables:", process.env);
 var homeRouter = require('./component/home/homeRoute');
 var userRouter = require('./component/user/userRoute');
 var productRouter = require('./component/product/productRoute');

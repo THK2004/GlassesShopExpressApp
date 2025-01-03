@@ -31,15 +31,16 @@
                         <small id="emailFeedback" class="text-sm"></small>
                     </div>
                     <div class="mb-4">
-                        <label for="password" class="block text-gray-600 mb-2">Password <span class="text-red-500">*</span></label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-indigo-500"
-                            placeholder="Enter your password"
-                            required
-                        />
+                      <label for="password" class="block text-gray-600 mb-2">Password <span class="text-red-500">*</span></label>
+                      <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-indigo-500"
+                        placeholder="Enter your password"
+                        required
+                      />
+                      <small id="passwordFeedback" class="text-sm"></small>
                     </div>
                     <div class="mb-6">
                         <label for="confirmPassword" class="block text-gray-600 mb-2">Confirm Password <span class="text-red-500">*</span></label>
@@ -92,12 +93,21 @@
     // Check username availability
     $('#username').on('blur', function () {
       const username = $(this).val().trim();
+      const usernameFeedback = $('#usernameFeedback');
+      const fullNamePattern = /^[A-Z][a-z]+( [A-Z][a-z]+)+$/; // At least two words, each starting with an uppercase letter
+
       if (username === '') {
-        $('#usernameFeedback').text('Please enter a username').css('color', 'red');
+        usernameFeedback.text('Username is required').css('color', 'red');
         return;
       }
 
-      // Add any additional username validation here if needed
+      if (!fullNamePattern.test(username)) {
+        usernameFeedback.text(
+          'Username must be a full name with at least two words, starting with uppercase letters (e.g., John Doe).'
+        ).css('color', 'red');
+      } else {
+        usernameFeedback.text('Username is valid').css('color', 'green');
+      }
     });
 
     // Check email availability and format
@@ -131,5 +141,67 @@
         },
       });
     });
+
+    $('#password').on('blur', function () {
+      const password = $(this).val();
+      const passwordFeedback = $('#passwordFeedback');
+      const complexityPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+      if (password === '') {
+        passwordFeedback.text('Password is required').css('color', 'red');
+        return;
+      }
+
+      if (!complexityPattern.test(password)) {
+        passwordFeedback.text(
+          'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.'
+        ).css('color', 'red');
+      } else {
+        passwordFeedback.text('Password is valid').css('color', 'green');
+      }
+    });
+
+    // Confirm password validation
+    $('#confirmPassword').on('blur', function () {
+      const password = $('#password').val();
+      const confirmPassword = $(this).val();
+      const confirmPasswordFeedback = $('#confirmPasswordFeedback');
+
+      if (confirmPassword === '') {
+        confirmPasswordFeedback.text('Please confirm your password').css('color', 'red');
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        confirmPasswordFeedback.text('Passwords do not match').css('color', 'red');
+      } else {
+        confirmPasswordFeedback.text('Passwords match').css('color', 'green');
+      }
+    });
+
+    // Prevent form submission if validation fails
+    $('form').on('submit', function (e) {
+      const username = $('#username').val().trim();
+      const fullNamePattern = /^[A-Z][a-z]+( [A-Z][a-z]+)+$/;
+
+      if (!fullNamePattern.test(username)) {
+        e.preventDefault();
+        alert('Please ensure the username is a valid full name.');
+      }
+
+      const password = $('#password').val();
+      const confirmPassword = $('#confirmPassword').val();
+      const complexityPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+      if (!complexityPattern.test(password)) {
+        e.preventDefault();
+        alert('Please ensure your password meets the complexity requirements.');
+      } else if (password !== confirmPassword) {
+        e.preventDefault();
+        alert('Passwords do not match.');
+      }
+    });
+
+
   });
 </script>
