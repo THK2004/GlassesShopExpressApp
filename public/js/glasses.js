@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 ...filters // Spread the filters to include them in the URL query string
             });
     
-            const response = await fetch(`glasses/api/products?${queryParams.toString()}`);
+            const response = await fetch(`/glasses/api/products?${queryParams.toString()}`);
             const data = await response.json();
     
             console.log("Fetched Data:", data); // Debug log
