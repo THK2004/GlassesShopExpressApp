@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
                 <div class="glasses_box">
                     <div class="glasses-image-container">
-                        <img src="${product.image}" alt="#" />
+                        <img src="${product.image[0]}" alt="#" />
                     </div>
                     <h3><span class="blu">$</span>${product.price}</h3>
                     <p>${product.name}</p>
