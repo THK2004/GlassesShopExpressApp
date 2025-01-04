@@ -1,6 +1,6 @@
-var express = require('express');
-var { getGlasses, getProductDetail, getPaginatedAndFilteredProduct, getPaginatedProductReviews } = require("./productController");
-var router = express.Router();
+const express = require('express');
+const { getGlasses, getProductDetail, getPaginatedAndFilteredProduct, getPaginatedProductReviews, sendReviews } = require("./productController");
+const router = express.Router();
 
 /* Route for API call */
 router.get('/api/products', getPaginatedAndFilteredProduct);
@@ -11,20 +11,15 @@ router.get('/', getGlasses);
 /* GET product detail page. */
 router.get('/:id', getProductDetail);
 
-//GET product reviews
+// GET product reviews
 router.get('/api/reviews/:productId', getPaginatedProductReviews);
 
-router.post('/api/comments', (req, res) => {
-    const { productId, userId, content } = req.body;
+// POST comment
+router.post('/api/comments', sendReviews);
 
-    // Here, you would typically insert the comment into your database.
-    console.log('Received review data:', { productId, userId, content });
-
-    // Sending a response back to the client
-    res.status(201).json({
-        message: 'Comment submitted successfully',
-        comment: { productId, userId, content }
-    });
-});
+/*router.post('/api/comments', (req,res)=>{
+    const {productId, userId, content} = req.body;
+    console.log('content:', content);
+})*/
 
 module.exports = router;

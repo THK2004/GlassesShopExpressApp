@@ -122,38 +122,72 @@ function openTab(event, tabName){
 }
 
 //SEND REVIEW
-function sendReview() {
+// function sendReview() {
+//     const content = document.getElementById("comment-content").value;
+//     const productId = document.querySelector('.product_details').dataset.productId;
+//     const userId = "1"; // temp hardcode
+
+//     const commentData = {
+//         productId: productId,
+//         userId: userId,
+//         content: content
+//     };
+
+//     console.log(commentData);
+
+//     // Sending the commentData to the backend using fetch
+//     fetch('/glasses/api/comments', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify(commentData)
+//     })
+//     .then(response => {
+//         if (!response.ok) {
+//             throw new Error(`HTTP error! status: ${response.status}`);
+//         }
+//         return response.json();
+//     })
+//     .then(data => {
+//         console.log('Comment submitted successfully:', data);
+//         // Optionally, update the UI or reset the form
+//     })
+//     .catch(error => {
+//         console.error('Error submitting comment:', error);
+//     });
+// }
+async function sendReview() {
     const content = document.getElementById("comment-content").value;
     const productId = document.querySelector('.product_details').dataset.productId;
-    const userId = "1"; // temp hardcode
+    const userId = "1"; // Replace with the actual user ID
 
     const commentData = {
         productId: productId,
         userId: userId,
         content: content
     };
-
     console.log(commentData);
+    try {
+        const response = await fetch('/glasses/api/comments', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(commentData)
+        });
 
-    // Sending the commentData to the backend using fetch
-    fetch('/glasses/api/comments', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(commentData)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+        if (response.ok) {
+            const data = await response.json();
+            alert("Comment submitted successfully!");
+            fetchReviews(); // Refresh reviews
+        } else {
+            const errorData = await response.json();
+            console.error("Error submitting comment:", errorData.message);
+            alert("Error submitting comment: " + errorData.message);
         }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Comment submitted successfully:', data);
-        // Optionally, update the UI or reset the form
-    })
-    .catch(error => {
-        console.error('Error submitting comment:', error);
-    });
+    } catch (error) {
+        console.error("Error submitting comment:", error);
+        alert("Error submitting comment: " + error.message);
+    }
 }

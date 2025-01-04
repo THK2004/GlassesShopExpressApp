@@ -88,9 +88,22 @@ const getPaginatedProductReviews =async (req, res) =>{
     }
 }
 
+const sendReviews = async (req, res) => {
+    const { productId, userId, content } = req.body;
+    console.log('Received review data:', { productId, userId, content });
+    try {
+        const review = await productsService.sendReviewData(productId, userId, content);
+        res.status(201).json({ message: "Comment submitted successfully!", review });
+    } catch (error) {
+        console.error('Error saving review data:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
 module.exports = {
     getGlasses,
     getProductDetail,
     getPaginatedAndFilteredProduct,
-    getPaginatedProductReviews
-}
+    getPaginatedProductReviews,
+    sendReviews
+};

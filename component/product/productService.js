@@ -96,10 +96,26 @@ async function getProductReviews(page =1, limit = 3, productId){
   }
 }
 
+async function sendReviewData(productId, userId, content) {
+  try {
+    const review = new Review ({
+      productid: productId,
+      userid: userId,
+      content: content
+    });
+    await review.save();
+    return review;
+  }catch(error){
+    console.error("Error saving review data to db:", error);
+    throw error;
+  }
+}
+
 module.exports = {
   getProductById,
   getSameBranchProduct,
   getRandomProducts,
   getPaginatedAndFilterProducts,
-  getProductReviews
+  getProductReviews,
+  sendReviewData
 };
