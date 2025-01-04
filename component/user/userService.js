@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs'); 
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const user = require('../../models/userModel'); // Path to your user.js file
 require('dotenv').config({ path: 'dbconfig.env' })
@@ -66,7 +67,7 @@ async function findUserByEmail(email) {
         throw error; // Propagate the error for handling in the controller
     }
   }
-  async function findUserByUsername(username) {
+async function findUserByUsername(username) {
     try {
       const database = client.db("shop");
       const users = database.collection("users");
@@ -77,7 +78,47 @@ async function findUserByEmail(email) {
       throw error;
     }
   }
+async function updateProfile(userId, username) {
+    try {
+      // Validate username
+      const fullNamePattern = /^[A-Z][a-z]+( [A-Z][a-z]+)+$/;
+      if (!fullNamePattern.test(username)) {
+        throw new Error('Invalid username format.');
+      }
+  
+      const updateData = { username };
+      await user.findByIdAndUpdate(userId, updateData);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      throw error;
+    }
+  }
+async function updatePasswordsv(userId, oldPassword, newPassword) {
+    try {
+      // Fetch the user from the database
+      const User = await user.findById(userId);
+  
+      if (!User) {
+        throw new Error('User not found.');
+      }
+  
+      // Check if the old password is correct
+      const isMatch = await bcrypt.compare(oldPassword, User.password);
+      if (!isMatch) {
+        throw new Error('Incorrect old password.');
+      }
+  
+      // Hash the new password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newPassword, salt);
+  
+      // Update the user's password
+      await user.findByIdAndUpdate(userId, { password: hashedPassword });
+    } catch (error) {
+      console.error('Error updating password:', error);
+      throw error;
+    }
+  }
 
 
-
-module.exports = { saveUser, findUserByEmail,findUserByUsername };
+module.exports = { saveUser, findUserByEmail,findUserByUsername,updateProfile,updatePasswordsv };

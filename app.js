@@ -2,7 +2,7 @@ var createError = require('http-errors');
 var express = require('express');
 const imgur = require('imgur');
 const session = require('express-session');
-const fileUpload = require('express-fileupload');
+
 const passport = require('passport');
 require('./config/passport')(passport); // Load Passport config
 
@@ -55,7 +55,6 @@ app.use(session({
 
 
 
-app.use(fileUpload());
 
 // Initialize Passport and session
 app.use(passport.initialize());

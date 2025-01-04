@@ -6,7 +6,7 @@ const userService = require('../../component/user/userService');
 require('dotenv').config({ path: 'dbconfig.env' })
 console.log('GOOGLE_CLIENT_ID:', process.env.GOOGLE_CLIENT_ID);
 console.log('GOOGLE_CLIENT_SECRET:', process.env.GOOGLE_CLIENT_SECRET);
-require('dotenv').config({ path: 'dbconfig.env' })
+
 
 module.exports = (passport) => {
   // Local Strategy for authentication

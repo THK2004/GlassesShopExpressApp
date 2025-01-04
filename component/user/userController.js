@@ -1,9 +1,4 @@
 const passport = require('passport'); 
-// const path = require('path');
-// var express = require('express');
-// const imgur = require('imgur');
-// const fs = require('fs');
-// const fileUpload = require('express-fileupload')
 const bcrypt = require('bcryptjs'); // For password hashing
 const userService = require('./userService');
 const User = require('../../models/userModel');
@@ -169,27 +164,16 @@ const updateProfile = async (req, res) => {
   try {
     const { username } = req.body;
 
-    // Validate username
-    const fullNamePattern = /^[A-Z][a-z]+( [A-Z][a-z]+)+$/;
-    if (!fullNamePattern.test(username)) {
-      return res.status(400).render('profile/profile', {
-        user: req.user,
-        errorMessage: 'Invalid username format.',
-      });
-    }
-
-    const updateData = { username };
-
-    // if (req.files && req.files.avatar) {
-    //   const avatarFile = req.files.avatar;
-    //   const imgurResponse = await imgur.uploadFile(avatarFile.tempFilePath);
-    //   updateData.avatar = imgurResponse.link;
-    // }
-
-    await User.findByIdAndUpdate(req.user._id, updateData);
+    await userService.updateProfile(req.user._id, username);
     res.redirect('/user/profile');
   } catch (error) {
     console.error('Error updating profile:', error);
+    if (error.message === 'Invalid username format.') {
+      return res.status(400).render('profile/profile', {
+        user: req.user,
+        errorMessage: error.message,
+      });
+    }
     res.status(500).send('An error occurred while updating the profile.');
   }
 };
@@ -199,46 +183,16 @@ const updatePassword = async (req, res) => {
   try {
     const { oldPassword, newPassword } = req.body;
 
-    // Fetch the user from the database
-    const user = await User.findById(req.user._id);
-
-    if (!user) {
-      return res.status(404).send('User not found.');
-    }
-
-    // Check if the old password is correct
-    const isMatch = await bcrypt.compare(oldPassword, user.password);
-    if (!isMatch) {
-      return res.status(400).render('profile/profile', {
-        user,
-        errorMessage: 'Incorrect old password.',
-      });
-    }
-
-    // Password complexity validation
-    const complexityPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    if (!complexityPattern.test(newPassword)) {
-      return res.status(400).render('profile/profile', {
-        user,
-        errorMessage:
-          'New password must include uppercase, lowercase, number, and special character, and be at least 8 characters long.',
-      });
-    }
-
-    // Hash the new password
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-    // Update the user's password
-    user.password = hashedPassword;
-    await user.save();
-
-    // Redirect with a success message
-    res.render('profile/profile', {
-      user,
-      successMessage: 'Password updated successfully!',
-    });
+    await userService.updatePasswordsv(req.user._id, oldPassword, newPassword);
+    res.redirect('/user/profile');
   } catch (error) {
     console.error('Error updating password:', error);
+    if (error.message === 'Incorrect old password.') {
+      return res.status(400).render('profile/profile', {
+        user: req.user,
+        errorMessage: error.message,
+      });
+    }
     res.status(500).send('An error occurred while updating the password.');
   }
 };
