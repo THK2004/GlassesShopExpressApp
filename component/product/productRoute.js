@@ -12,6 +12,6 @@ router.get('/', getGlasses);
 router.get('/:id', getProductDetail);
 
 //GET product reviews
-router.get('/api/reviews/:productId', getProductReviews);
+// router.get('/api/reviews/:productId', getProductReviews);
 
 module.exports = router;

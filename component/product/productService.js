@@ -83,7 +83,6 @@ async function getPaginatedAndFilterProducts(page = 1, limit = 4, filters = {}) 
 async function getProductReviews(page =1, limit = 3, productId){
   try{
     
-
     const skip = (page-1)*limit;
     const reviews = await Review.find({productId}).skip(skip).limit(limit);
     const totalReviews = await Review.countDocuments({productId});
