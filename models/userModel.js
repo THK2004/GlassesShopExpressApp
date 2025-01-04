@@ -43,6 +43,10 @@ const userSchema = new Schema(
     cart: {
         type: Object,
         required: false,
+    },
+    avatar:{
+      type: String,
+      required: false,
     }
   },
   {

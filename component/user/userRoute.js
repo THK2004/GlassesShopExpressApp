@@ -12,14 +12,14 @@ router.get('/login', getLogin);
 
 /* GET register page. */
 router.get('/register', getRegister);
-
+router.get('/cart', /*ensureAuthenticated,*/ getCart);
 // POST form submission
 router.post('/register', postRegister);
 
 router.post('/login', postLogin);
 
 // GET cart page
-router.get('/cart', ensureAuthenticated, getCart);
+
 
 router.get('/logout', getlogout);
 

@@ -28,7 +28,7 @@ const productModel = new mongoose.Schema({
     required: true,
   },
   'image': {
-    type: String,
+    type: [String],
     required: false,
   },
   'sex': {
