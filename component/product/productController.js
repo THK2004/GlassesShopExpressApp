@@ -71,8 +71,26 @@ const getPaginatedAndFilteredProduct = async (req, res) => {
     }
 };
 
+
+const getPaginatedProductReviews =async (req, res) =>{
+    const productId = req.params.productId;
+    const {page = 1, limit = 3} = req.query;
+    try {
+        const {reviews, totalReviews} = await productsService.getProductReviews(page,limit,productId);
+        console.log('reviews:', reviews);
+        res.json({
+            reviews,
+            totalReviews,
+        });
+    }catch(error){
+        console.error('Error fetching product reviews:', error);
+        res.status(500).json({messgae: 'Internal Server Error'});
+    }
+}
+
 module.exports = {
     getGlasses,
     getProductDetail,
-    getPaginatedAndFilteredProduct
+    getPaginatedAndFilteredProduct,
+    getPaginatedProductReviews
 }

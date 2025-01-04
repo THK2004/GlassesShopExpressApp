@@ -4,87 +4,95 @@
             <div class="product_image col-4">
                 <img src="{{product.image.[0]}}" alt="#">
             </div>
-            <div class="product_details col-8">
-                <h3>Name: {{product.name}}</h3>
-                <p>Price: ${{product.price}}</p>
-                <p>Description: {{product.description}}</p>
-                <p>Brand: {{product.brand}}</p>
-                <p>Material: {{product.material}}</p>
-                <p>Sex: {{product.sex}}</p>
-                <br>
-                <button onclick="add_to_cart()" class="add_to_cart">Add to cart</button>
+            <div class="product_details col-8" data-product-id="{{product.productId}}">
+                <div class="tab">
+                    <button class="tablinks" onclick="openTab(event, 'details')" id="defaultOpen">Details</button>
+                    <button class="tablinks" onclick="openTab(event, 'purchase')">Purchase</button>
+                </div>
+
+                <div class="tabcontent" id="details">
+                    <h3>Product details</h3>
+                    <p><strong>Brand:</strong> {{product.brand}}</p>
+                    <p><strong>Material:</strong> {{product.material}}</p>
+                    <p><strong>About this product:</strong> {{product.description}}</p>
+                    <p><strong>Sex:</strong> {{product.sex}}</p>
+                    <h2><strong>{{product.sales}} ITEMS SOLD!!!</strong></h2>
+                    <h1>ONLY ${{product.price}}</h1>
+                </div>
+
+                <div class="tabcontent" id="purchase">
+                    <h3>Purchase</h3>
+                    <p>Stock: {{product.stock}}</p>
+                    <p>Status: {{product.status}}</p>
+                    <br>
+                    {{#if product.stock }}
+                        <button onclick="add_to_cart()" class="add_to_cart">Add to cart</button>
+                    {{else}}
+                        <button class="out_of_stock" disabled>OUT OF STOCK</button>
+                    {{/if}}
+                </div>
             </div>
         </div>
     </div>
 
     <div class="review_container">
-            <h2 class="review-title">Reviews</h2>
-            
-            <div class="comment-form">
-                <h3>Leave a Comment</h3>
-                <form action="#" method="post">
-                    <textarea name="comment" placeholder="Write your comment here..."></textarea>
-                    <br>
-                    <input type="submit" value="Submit Comment">
-                </form>
-            </div>
+        <h2 class="review-title">Reviews</h2>
+        
+        <div class="comment-form">
+            <h3>Leave a Comment</h3>
+            <textarea id="comment-content" placeholder="Write your comment here..."></textarea>
+            <br>
+            <button onClick="sendReview()" id="submit-comment" class="btn btn-primary">Submit Comment</button>
+        </div>
 
-            <div class="comments">
-                <h3>Comments</h3>
-                <div class="comment">
-                    <p class="comment-author">John Doe</p>
-                    <p class="comment-date">June 1, 2023</p>
-                    <p>Great product! I love it.</p>
-                </div>
-                <div class="comment">
-                    <p class="comment-author">Jane Smith</p>
-                    <p class="comment-date">June 2, 2023</p>
-                    <p>The quality is amazing.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="container mt-5">
-        <h2>Same Brand Products</h2>
-        <div class="row">
-            {{#each sameProductsBrand}}
-            <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
-                <div class="card">
-                    <div class="card-image-container">
-                        <img src="{{this.image.[0]}}" class="card-img-top" alt="{{this.name}}">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{this.name}}</h5>
-                        <p class="card-text">Material: {{this.material}}</p>
-                        <p class="card-text">Price: ${{this.price}}</p>
-                        <a href="/glasses/{{this.productId}}" class="btn btn-primary">View Product</a>
-                    </div>
-                </div>
-            </div>
-            {{/each}}
-        </div>
-    </div>
-    <div class="container mt-5">
-        <h2>Other related products you might like</h2>
-        <div class="row">
-            {{#each randomProduct}}
-            <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
-                <div class="card">
-                    <div class="card-image-container">
-                        <img src="{{this.image.[0]}}" class="card-img-top" alt="{{this.name}}">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{this.name}}</h5>
-                        <p class="card-text">Material: {{this.material}}</p>
-                        <p class="card-text">Price: ${{this.price}}</p>
-                        <a href="/glasses/{{this.productId}}" class="btn btn-primary">View Product</a>
-                    </div>
-                </div>
-            </div>
-            {{/each}}
+        <div id="reviews-section">  
+            <h3>Product Reviews</h3>
+            <div id="reviews-list"></div>
+            <div id="reviews-pagination-controls"></div>
         </div>
     </div>
 </div>
 
+<div class="container mt-5">
+    <h2>Same Brand Products</h2>
+    <div class="row">
+        {{#each sameProductsBrand}}
+        <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+            <div class="card">
+                <div class="card-image-container">
+                    <img src="{{this.image.[0]}}" class="card-img-top" alt="{{this.name}}">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{this.name}}</h5>
+                    <p class="card-text">Material: {{this.material}}</p>
+                    <p class="card-text">Price: ${{this.price}}</p>
+                    <a href="/glasses/{{this.productId}}" class="btn btn-primary">View Product</a>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>
+<div class="container mt-5">
+    <h2>Other related products you might like</h2>
+    <div class="row">
+        {{#each randomProduct}}
+        <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+            <div class="card">
+                <div class="card-image-container">
+                    <img src="{{this.image.[0]}}" class="card-img-top" alt="{{this.name}}">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{this.name}}</h5>
+                    <p class="card-text">Material: {{this.material}}</p>
+                    <p class="card-text">Price: ${{this.price}}</p>
+                    <a href="/glasses/{{this.productId}}" class="btn btn-primary">View Product</a>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>
+
 <script src="/js/product.js"></script>
+<script>document.getElementById("defaultOpen").click();</script>

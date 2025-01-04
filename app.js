@@ -2,6 +2,7 @@ var createError = require('http-errors');
 var express = require('express');
 const session = require('express-session');
 const passport = require('passport');
+
 require('./config/passport')(passport); // Load Passport config
 
 
