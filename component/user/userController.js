@@ -17,45 +17,61 @@ const getRegister = (req, res) => {
 const postRegister = async (req, res) => {
   try {
     const { username, email, password, confirmPassword } = req.body;
+    const errors = [];
 
-    // Check if the email format is correct
+    // Validate username (full name format)
+    const fullNamePattern = /^[A-Z][a-z]+( [A-Z][a-z]+)+$/; // At least two words, each starting with an uppercase letter
+    if (!fullNamePattern.test(username)) {
+      errors.push('Username must be a full name with at least two words, starting with uppercase letters (e.g., John Doe).');
+    }
+
+    // Validate email format
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(email)) {
-      return res.status(400).render('register/register', {
-        register: true,
-        errorMessage: 'Please enter a valid email address.'
-      });
+      errors.push('Please enter a valid email address.');
     }
+
     // Check if the email already exists
-    const user = await User.findOne({ email: email });
-    if (user) {
-      return res.status(400).render('register/register', {
-        register: true,
-        errorMessage: 'Email already exists.'
-      });
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      errors.push('Email already exists.');
     }
-    
+
+    // Validate password complexity
+    const passwordComplexityPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordComplexityPattern.test(password)) {
+      errors.push(
+        'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.'
+      );
+    }
+
     // Validate password confirmation
     if (password !== confirmPassword) {
+      errors.push('Passwords do not match.');
+    }
+
+    // If there are validation errors, render the form with error messages
+    if (errors.length > 0) {
       return res.status(400).render('register/register', {
         register: true,
-        errorMessage: 'Passwords do not match.'
+        errorMessage: errors.join('<br>'), // Display multiple errors in the frontend
       });
     }
-    
+
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-    
+
     // Save the user to the database
     await userService.saveUser(username, email, hashedPassword);
-    
-    // Redirect to home page or login page
-    res.redirect('/user/login'); // Adjust the route as needed
+
+    // Redirect to the login page after successful registration
+    res.redirect('/user/login');
   } catch (error) {
-    console.error(error);
-    // Handle any unexpected errors
+    console.error('Error during registration:', error);
+    // Render error message in case of unexpected errors
     res.status(500).render('register/register', {
-      errorMessage: 'An error occurred during registration. Please try again.'
+      register: true,
+      errorMessage: 'An unexpected error occurred during registration. Please try again.',
     });
   }
 };
@@ -151,47 +167,63 @@ const getProfile = async (req, res) => {
 // Handle profile update form submission
 const updateProfile = async (req, res) => {
   try {
-    const { username,avatar } = req.body;
-    console.log('Updating profile:', req.body);
-    console.log(req.files)
-    const update = { username: username };
+    const { username } = req.body;
 
+    // Validate username
+    const fullNamePattern = /^[A-Z][a-z]+( [A-Z][a-z]+)+$/;
+    if (!fullNamePattern.test(username)) {
+      return res.status(400).render('profile/profile', {
+        user: req.user,
+        errorMessage: 'Invalid username format.',
+      });
+    }
 
-    await User.findByIdAndUpdate(req.user._id, update);
+    const updateData = { username };
+
+    // if (req.files && req.files.avatar) {
+    //   const avatarFile = req.files.avatar;
+    //   const imgurResponse = await imgur.uploadFile(avatarFile.tempFilePath);
+    //   updateData.avatar = imgurResponse.link;
+    // }
+
+    await User.findByIdAndUpdate(req.user._id, updateData);
     res.redirect('/user/profile');
   } catch (error) {
-    console.error(error);
+    console.error('Error updating profile:', error);
     res.status(500).send('An error occurred while updating the profile.');
   }
 };
 
+
 const updatePassword = async (req, res) => {
   try {
     const { oldPassword, newPassword } = req.body;
-    
+
     // Fetch the user from the database
     const user = await User.findById(req.user._id);
 
     if (!user) {
       return res.status(404).send('User not found.');
     }
-    if (!user.password) {
-      return res.status(400).render('profile/profile', {
-        user,
-        errorMessage: 'You cannot update your password as you signed up with Google. Please contact support.',
-      });
-    }
 
     // Check if the old password is correct
     const isMatch = await bcrypt.compare(oldPassword, user.password);
-    
     if (!isMatch) {
       return res.status(400).render('profile/profile', {
         user,
         errorMessage: 'Incorrect old password.',
       });
     }
-    
+
+    // Password complexity validation
+    const complexityPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!complexityPattern.test(newPassword)) {
+      return res.status(400).render('profile/profile', {
+        user,
+        errorMessage:
+          'New password must include uppercase, lowercase, number, and special character, and be at least 8 characters long.',
+      });
+    }
 
     // Hash the new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
@@ -211,52 +243,6 @@ const updatePassword = async (req, res) => {
   }
 };
 
-// Ensure the uploads directory exists
-// const uploadDir = path.join(__dirname, 'uploads');
-// if (!fs.existsSync(uploadDir)) {
-//   fs.mkdirSync(uploadDir);
-// }
-
-// const updateProfile = async (req, res) => {
-//   try {
-//     const { username } = req.body;
-//     console.log('Updating profile:', req.body);
-
-//     const update = { username };
-
-//     if (req.files && req.files.avatar) {
-//       const avatarFile = req.files.avatar;
-//       const uploadPath = path.join(uploadDir, avatarFile.name);
-
-//       // // Move the file to the upload directory
-//       // await new Promise((resolve, reject) => {
-//       //   avatarFile.mv(uploadPath, (err) => {
-//       //     if (err) return reject(err);
-//       //     resolve();
-//       //   });
-//       // });
-      
-
-//       // Upload the file to Imgur
-//       try {
-//         const response = await imgur.uploadFile(uploadPath);
-//         update.avatar = response.link; // Store the Imgur URL in the update object
-//         fs.unlinkSync(uploadPath); // Delete the local file after upload
-//       } catch (error) {
-//         console.error('Error uploading to Imgur:', error);
-//         fs.unlinkSync(uploadPath); // Ensure the temporary file is deleted
-//         return res.status(500).send('An error occurred while uploading the avatar.');
-//       }
-//     }
-
-//     // Update the user profile in the database
-//     await User.findByIdAndUpdate(req.user._id, update);
-//     res.redirect('/user/profile');
-//   } catch (error) {
-//     console.error('Error updating profile:', error);
-//     res.status(500).send('An error occurred while updating the profile.');
-//   }
-// };
 module.exports = {
   getRegister,
   postRegister,

@@ -51,7 +51,7 @@ async function saveUser(username, email, hashedPassword, options = {}) {
 
 async function findUserByEmail(email) {
     try {
-        console.log('Searching for email:', email);
+        //console.log('Searching for email:', email);
         const database = client.db("shop");
         const users = database.collection("users");
         const foundUser = await users.findOne({ email }); // Search for a user by email

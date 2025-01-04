@@ -45,6 +45,7 @@
             placeholder="Enter your password"
             required
           />
+          <small id="passwordFeedback" class="text-sm"></small>
         </div>
         <div class="text-right mb-4">
           <a href="/user/login" class="text-sm text-indigo-500 hover:underline">
@@ -86,7 +87,7 @@
 <script>
   $(document).ready(function () {
     // Real-time email validation
-    $('#email').on('blur', function () {
+    $('#email').on('input', function () {
       const email = $(this).val().trim();
       const emailFeedback = $('#emailFeedback');
       if (email === '') {
@@ -117,10 +118,14 @@
     });
 
     // Real-time password validation
-    $('#password').on('blur', function () {
+    $('#password').on('input', function () {
       const password = $(this).val().trim();
       if (password === '') {
-        alert('Please enter your password.');
+        $('#passwordFeedback').text('Please enter your password.').css('color', 'red');
+        //alert('Please enter your password.');
+      }
+      else{
+        $('#passwordFeedback').text('');
       }
     });
     
