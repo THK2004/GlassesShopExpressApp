@@ -35,6 +35,7 @@ async function saveUser(username, email, hashedPassword, options = {}) {
       permission: options.permission || null,
       status: options.status || 'active',
       cart: options.cart || {},
+      avatar: options.avatar || null,
     });
 
     // Save the user to the database
@@ -76,4 +77,7 @@ async function findUserByEmail(email) {
       throw error;
     }
   }
+
+
+
 module.exports = { saveUser, findUserByEmail,findUserByUsername };

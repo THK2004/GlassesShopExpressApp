@@ -1,6 +1,8 @@
 var createError = require('http-errors');
 var express = require('express');
+const imgur = require('imgur');
 const session = require('express-session');
+const fileUpload = require('express-fileupload');
 const passport = require('passport');
 require('./config/passport')(passport); // Load Passport config
 
@@ -28,7 +30,6 @@ db.connect(dbconfig.url);
 
 var app = express();
 
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
@@ -54,6 +55,7 @@ app.use(session({
 
 
 
+app.use(fileUpload());
 
 // Initialize Passport and session
 app.use(passport.initialize());

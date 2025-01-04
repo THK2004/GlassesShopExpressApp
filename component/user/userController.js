@@ -1,7 +1,13 @@
 const passport = require('passport'); 
+// const path = require('path');
+// var express = require('express');
+// const imgur = require('imgur');
+// const fs = require('fs');
+// const fileUpload = require('express-fileupload')
 const bcrypt = require('bcryptjs'); // For password hashing
 const userService = require('./userService');
 const User = require('../../models/userModel');
+
 // Render the registration page
 const getRegister = (req, res) => {
   res.render('register/register', { register: true });
@@ -132,8 +138,125 @@ const checkAvailability = async (req, res) => {
   }
 };
 
+const getProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    res.render('profile/profile', { user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('An error occurred while fetching the profile.');
+  }
+};
+
+// Handle profile update form submission
+const updateProfile = async (req, res) => {
+  try {
+    const { username,avatar } = req.body;
+    console.log('Updating profile:', req.body);
+    console.log(req.files)
+    const update = { username: username };
 
 
+    await User.findByIdAndUpdate(req.user._id, update);
+    res.redirect('/user/profile');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('An error occurred while updating the profile.');
+  }
+};
+
+const updatePassword = async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+    
+    // Fetch the user from the database
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).send('User not found.');
+    }
+    if (!user.password) {
+      return res.status(400).render('profile/profile', {
+        user,
+        errorMessage: 'You cannot update your password as you signed up with Google. Please contact support.',
+      });
+    }
+
+    // Check if the old password is correct
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    
+    if (!isMatch) {
+      return res.status(400).render('profile/profile', {
+        user,
+        errorMessage: 'Incorrect old password.',
+      });
+    }
+    
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update the user's password
+    user.password = hashedPassword;
+    await user.save();
+
+    // Redirect with a success message
+    res.render('profile/profile', {
+      user,
+      successMessage: 'Password updated successfully!',
+    });
+  } catch (error) {
+    console.error('Error updating password:', error);
+    res.status(500).send('An error occurred while updating the password.');
+  }
+};
+
+// Ensure the uploads directory exists
+// const uploadDir = path.join(__dirname, 'uploads');
+// if (!fs.existsSync(uploadDir)) {
+//   fs.mkdirSync(uploadDir);
+// }
+
+// const updateProfile = async (req, res) => {
+//   try {
+//     const { username } = req.body;
+//     console.log('Updating profile:', req.body);
+
+//     const update = { username };
+
+//     if (req.files && req.files.avatar) {
+//       const avatarFile = req.files.avatar;
+//       const uploadPath = path.join(uploadDir, avatarFile.name);
+
+//       // // Move the file to the upload directory
+//       // await new Promise((resolve, reject) => {
+//       //   avatarFile.mv(uploadPath, (err) => {
+//       //     if (err) return reject(err);
+//       //     resolve();
+//       //   });
+//       // });
+      
+
+//       // Upload the file to Imgur
+//       try {
+//         const response = await imgur.uploadFile(uploadPath);
+//         update.avatar = response.link; // Store the Imgur URL in the update object
+//         fs.unlinkSync(uploadPath); // Delete the local file after upload
+//       } catch (error) {
+//         console.error('Error uploading to Imgur:', error);
+//         fs.unlinkSync(uploadPath); // Ensure the temporary file is deleted
+//         return res.status(500).send('An error occurred while uploading the avatar.');
+//       }
+//     }
+
+//     // Update the user profile in the database
+//     await User.findByIdAndUpdate(req.user._id, update);
+//     res.redirect('/user/profile');
+//   } catch (error) {
+//     console.error('Error updating profile:', error);
+//     res.status(500).send('An error occurred while updating the profile.');
+//   }
+// };
 module.exports = {
   getRegister,
   postRegister,
@@ -141,5 +264,8 @@ module.exports = {
   postLogin,
   getCart,
   getlogout,
-  checkAvailability
+  checkAvailability,
+  getProfile,
+  updateProfile,
+  updatePassword
 };
