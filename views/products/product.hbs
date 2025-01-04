@@ -2,7 +2,7 @@
     <div class="row product_info_container">
         <div class="product_info">
             <div class="product_image col-4">
-                <img src="{{product.image}}" alt="#">
+                <img src="{{product.image.[0]}}" alt="#">
             </div>
             <div class="product_details col-8">
                 <h3>Name: {{product.name}}</h3>
@@ -16,6 +16,35 @@
             </div>
         </div>
     </div>
+
+    <div class="review_container">
+            <h2 class="review-title">Reviews</h2>
+            
+            <div class="comment-form">
+                <h3>Leave a Comment</h3>
+                <form action="#" method="post">
+                    <textarea name="comment" placeholder="Write your comment here..."></textarea>
+                    <br>
+                    <input type="submit" value="Submit Comment">
+                </form>
+            </div>
+
+            <div class="comments">
+                <h3>Comments</h3>
+                <div class="comment">
+                    <p class="comment-author">John Doe</p>
+                    <p class="comment-date">June 1, 2023</p>
+                    <p>Great product! I love it.</p>
+                </div>
+                <div class="comment">
+                    <p class="comment-author">Jane Smith</p>
+                    <p class="comment-date">June 2, 2023</p>
+                    <p>The quality is amazing.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <div class="container mt-5">
         <h2>Same Brand Products</h2>
         <div class="row">
@@ -23,7 +52,7 @@
             <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
                 <div class="card">
                     <div class="card-image-container">
-                        <img src="{{this.image}}" class="card-img-top" alt="{{this.name}}">
+                        <img src="{{this.image.[0]}}" class="card-img-top" alt="{{this.name}}">
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">{{this.name}}</h5>
@@ -43,7 +72,7 @@
             <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
                 <div class="card">
                     <div class="card-image-container">
-                        <img src="{{this.image}}" class="card-img-top" alt="{{this.name}}">
+                        <img src="{{this.image.[0]}}" class="card-img-top" alt="{{this.name}}">
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">{{this.name}}</h5>
@@ -57,3 +86,5 @@
         </div>
     </div>
 </div>
+
+<script src="/js/product.js"></script>

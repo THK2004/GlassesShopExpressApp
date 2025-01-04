@@ -1,4 +1,5 @@
 const Product = require('../../models/productModel');
+const Review = require('../../models/reviewModel');
 
 async function getProductById(productId) {
   try {
@@ -79,9 +80,25 @@ async function getPaginatedAndFilterProducts(page = 1, limit = 4, filters = {}) 
   }
 }
 
+async function getProductReviews(page =1, limit = 3, productId){
+  try{
+    
+    const skip = (page-1)*limit;
+    const reviews = await Review.find({productId}).skip(skip).limit(limit);
+    const totalReviews = await Review.countDocuments({productId});
+    return {reviews,totalReviews};
+    
+  }catch(error){
+    console.error("error fetching product reviews:", error);
+    return {reviews:[], totalReviews:0};
+
+  }
+}
+
 module.exports = {
   getProductById,
   getSameBranchProduct,
   getRandomProducts,
-  getPaginatedAndFilterProducts
+  getPaginatedAndFilterProducts,
+  getProductReviews
 };

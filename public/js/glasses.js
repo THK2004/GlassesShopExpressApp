@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 ...filters // Spread the filters to include them in the URL query string
             });
     
-            const response = await fetch(`glasses/api/products?${queryParams.toString()}`);
+            const response = await fetch(`/glasses/api/products?${queryParams.toString()}`);
             const data = await response.json();
     
             console.log("Fetched Data:", data); // Debug log
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
                 <div class="glasses_box">
                     <div class="glasses-image-container">
-                        <img src="${product.image}" alt="#" />
+                        <img src="${product.image[0]}" alt="#" />
                     </div>
                     <h3><span class="blu">$</span>${product.price}</h3>
                     <p>${product.name}</p>
