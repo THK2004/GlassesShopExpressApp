@@ -19,7 +19,8 @@ router.post('/register', postRegister);
 router.post('/login', postLogin);
 
 // GET cart page
-router.get('/cart', ensureAuthenticated, getCart);
+router.get('/cart', getCart);
+// ensureAuthenticated 
 
 router.get('/logout', getlogout);
 

@@ -22,6 +22,10 @@ const userSchema = new Schema(
         return !this.googleId; // Only require password if not a Google user
       },
     },
+    avatar: {
+      type: String,
+      required: false,
+    },
     googleId: {
       type: String, // Store the Google ID for users who log in via Google
     },
