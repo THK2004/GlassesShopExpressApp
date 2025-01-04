@@ -1,7 +1,8 @@
 const passport = require('passport'); 
 var express = require('express');
 
-var { getRegister, postRegister, getLogin, postLogin, getCart, getlogout, checkAvailability } = require("./userController");
+var { getRegister, postRegister, getLogin, postLogin, getCart, getlogout, checkAvailability, getProfile,
+  updateProfile,updatePassword } = require("./userController");
 const { ensureAuthenticated } = require('../../middleware/auth');
 
 var router = express.Router();
@@ -22,7 +23,14 @@ router.post('/login', postLogin);
 router.get('/cart', getCart);
 // ensureAuthenticated 
 
-router.get('/logout', getlogout);
+router.get('/logout',ensureAuthenticated, getlogout);
+
+router.get('/profile',ensureAuthenticated, getProfile);
+
+// Route to update the user profile
+router.post('/profile',ensureAuthenticated, updateProfile);
+
+router.post('/update-password', ensureAuthenticated, updatePassword);
 
 router.post('/check-availability', checkAvailability);
 

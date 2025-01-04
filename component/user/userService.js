@@ -35,6 +35,7 @@ async function saveUser(username, email, hashedPassword, options = {}) {
       permission: options.permission || null,
       status: options.status || 'active',
       cart: options.cart || {},
+      avatar: options.avatar || null,
     });
 
     // Save the user to the database
@@ -50,7 +51,7 @@ async function saveUser(username, email, hashedPassword, options = {}) {
 
 async function findUserByEmail(email) {
     try {
-        console.log('Searching for email:', email);
+        //console.log('Searching for email:', email);
         const database = client.db("shop");
         const users = database.collection("users");
         const foundUser = await users.findOne({ email }); // Search for a user by email
@@ -76,4 +77,7 @@ async function findUserByEmail(email) {
       throw error;
     }
   }
+
+
+
 module.exports = { saveUser, findUserByEmail,findUserByUsername };

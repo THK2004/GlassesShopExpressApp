@@ -1,7 +1,13 @@
 const passport = require('passport'); 
+// const path = require('path');
+// var express = require('express');
+// const imgur = require('imgur');
+// const fs = require('fs');
+// const fileUpload = require('express-fileupload')
 const bcrypt = require('bcryptjs'); // For password hashing
 const userService = require('./userService');
 const User = require('../../models/userModel');
+
 // Render the registration page
 const getRegister = (req, res) => {
   res.render('register/register', { register: true });
@@ -11,45 +17,61 @@ const getRegister = (req, res) => {
 const postRegister = async (req, res) => {
   try {
     const { username, email, password, confirmPassword } = req.body;
+    const errors = [];
 
-    // Check if the email format is correct
+    // Validate username (full name format)
+    const fullNamePattern = /^[A-Z][a-z]+( [A-Z][a-z]+)+$/; // At least two words, each starting with an uppercase letter
+    if (!fullNamePattern.test(username)) {
+      errors.push('Username must be a full name with at least two words, starting with uppercase letters (e.g., John Doe).');
+    }
+
+    // Validate email format
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(email)) {
-      return res.status(400).render('register/register', {
-        register: true,
-        errorMessage: 'Please enter a valid email address.'
-      });
+      errors.push('Please enter a valid email address.');
     }
+
     // Check if the email already exists
-    const user = await User.findOne({ email: email });
-    if (user) {
-      return res.status(400).render('register/register', {
-        register: true,
-        errorMessage: 'Email already exists.'
-      });
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      errors.push('Email already exists.');
     }
-    
+
+    // Validate password complexity
+    const passwordComplexityPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordComplexityPattern.test(password)) {
+      errors.push(
+        'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.'
+      );
+    }
+
     // Validate password confirmation
     if (password !== confirmPassword) {
+      errors.push('Passwords do not match.');
+    }
+
+    // If there are validation errors, render the form with error messages
+    if (errors.length > 0) {
       return res.status(400).render('register/register', {
         register: true,
-        errorMessage: 'Passwords do not match.'
+        errorMessage: errors.join('<br>'), // Display multiple errors in the frontend
       });
     }
-    
+
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-    
+
     // Save the user to the database
     await userService.saveUser(username, email, hashedPassword);
-    
-    // Redirect to home page or login page
-    res.redirect('/user/login'); // Adjust the route as needed
+
+    // Redirect to the login page after successful registration
+    res.redirect('/user/login');
   } catch (error) {
-    console.error(error);
-    // Handle any unexpected errors
+    console.error('Error during registration:', error);
+    // Render error message in case of unexpected errors
     res.status(500).render('register/register', {
-      errorMessage: 'An error occurred during registration. Please try again.'
+      register: true,
+      errorMessage: 'An unexpected error occurred during registration. Please try again.',
     });
   }
 };
@@ -132,7 +154,94 @@ const checkAvailability = async (req, res) => {
   }
 };
 
+const getProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    res.render('profile/profile', { user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('An error occurred while fetching the profile.');
+  }
+};
 
+// Handle profile update form submission
+const updateProfile = async (req, res) => {
+  try {
+    const { username } = req.body;
+
+    // Validate username
+    const fullNamePattern = /^[A-Z][a-z]+( [A-Z][a-z]+)+$/;
+    if (!fullNamePattern.test(username)) {
+      return res.status(400).render('profile/profile', {
+        user: req.user,
+        errorMessage: 'Invalid username format.',
+      });
+    }
+
+    const updateData = { username };
+
+    // if (req.files && req.files.avatar) {
+    //   const avatarFile = req.files.avatar;
+    //   const imgurResponse = await imgur.uploadFile(avatarFile.tempFilePath);
+    //   updateData.avatar = imgurResponse.link;
+    // }
+
+    await User.findByIdAndUpdate(req.user._id, updateData);
+    res.redirect('/user/profile');
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    res.status(500).send('An error occurred while updating the profile.');
+  }
+};
+
+
+const updatePassword = async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+
+    // Fetch the user from the database
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).send('User not found.');
+    }
+
+    // Check if the old password is correct
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).render('profile/profile', {
+        user,
+        errorMessage: 'Incorrect old password.',
+      });
+    }
+
+    // Password complexity validation
+    const complexityPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!complexityPattern.test(newPassword)) {
+      return res.status(400).render('profile/profile', {
+        user,
+        errorMessage:
+          'New password must include uppercase, lowercase, number, and special character, and be at least 8 characters long.',
+      });
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update the user's password
+    user.password = hashedPassword;
+    await user.save();
+
+    // Redirect with a success message
+    res.render('profile/profile', {
+      user,
+      successMessage: 'Password updated successfully!',
+    });
+  } catch (error) {
+    console.error('Error updating password:', error);
+    res.status(500).send('An error occurred while updating the password.');
+  }
+};
 
 module.exports = {
   getRegister,
@@ -141,5 +250,8 @@ module.exports = {
   postLogin,
   getCart,
   getlogout,
-  checkAvailability
+  checkAvailability,
+  getProfile,
+  updateProfile,
+  updatePassword
 };

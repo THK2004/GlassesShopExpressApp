@@ -6,7 +6,7 @@
                 <!-- Registration Form -->
                 <form action="/user/register" method="POST">
                     <div class="mb-4">
-                        <label for="username" class="block text-gray-600 mb-2">Username <span class="text-red-500">*</span></label>
+                        <label for="username" class="block text-gray-600 mb-2">Full Name <span class="text-red-500">*</span></label>
                         <input
                             type="text"
                             id="username"
@@ -89,119 +89,98 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-  $(document).ready(function () {
-    // Check username availability
-    $('#username').on('blur', function () {
-      const username = $(this).val().trim();
-      const usernameFeedback = $('#usernameFeedback');
-      const fullNamePattern = /^[A-Z][a-z]+( [A-Z][a-z]+)+$/; // At least two words, each starting with an uppercase letter
+$(document).ready(function () {
+  // Real-time username validation
+  $('#username').on('input', function () {
+    const username = $(this).val().trim();
+    const usernameFeedback = $('#usernameFeedback');
+    const fullNamePattern = /^[A-Z][a-z]+( [A-Z][a-z]+)+$/; // At least two words, each starting with an uppercase letter
 
-      if (username === '') {
-        usernameFeedback.text('Username is required').css('color', 'red');
-        return;
-      }
+    if (username === '') {
+      usernameFeedback.text('Username is required').css('color', 'red');
+      return;
+    }
 
-      if (!fullNamePattern.test(username)) {
-        usernameFeedback.text(
-          'Username must be a full name with at least two words, starting with uppercase letters (e.g., John Doe).'
-        ).css('color', 'red');
-      } else {
-        usernameFeedback.text('Username is valid').css('color', 'green');
-      }
-    });
-
-    // Check email availability and format
-    $('#email').on('blur', function () {
-      const email = $(this).val().trim();
-      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (email === '') {
-        $('#emailFeedback').text('Please enter an email address').css('color', 'red');
-        return;
-      }
-      if (!emailPattern.test(email)) {
-        $('#emailFeedback').text('Please enter a valid email address').css('color', 'red');
-        return;
-      }
-
-      $.ajax({
-        url: '/user/check-availability',
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({ email }),
-        success: function (response) {
-          const emailFeedback = $('#emailFeedback');
-          if (response.emailAvailable) {
-            emailFeedback.text('Email is available').css('color', 'green');
-          } else {
-            emailFeedback.text('Email is already registered').css('color', 'red');
-          }
-        },
-        error: function () {
-          $('#emailFeedback').text('Error checking email availability. Please try again.').css('color', 'red');
-        },
-      });
-    });
-
-    $('#password').on('blur', function () {
-      const password = $(this).val();
-      const passwordFeedback = $('#passwordFeedback');
-      const complexityPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-      if (password === '') {
-        passwordFeedback.text('Password is required').css('color', 'red');
-        return;
-      }
-
-      if (!complexityPattern.test(password)) {
-        passwordFeedback.text(
-          'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.'
-        ).css('color', 'red');
-      } else {
-        passwordFeedback.text('Password is valid').css('color', 'green');
-      }
-    });
-
-    // Confirm password validation
-    $('#confirmPassword').on('blur', function () {
-      const password = $('#password').val();
-      const confirmPassword = $(this).val();
-      const confirmPasswordFeedback = $('#confirmPasswordFeedback');
-
-      if (confirmPassword === '') {
-        confirmPasswordFeedback.text('Please confirm your password').css('color', 'red');
-        return;
-      }
-
-      if (password !== confirmPassword) {
-        confirmPasswordFeedback.text('Passwords do not match').css('color', 'red');
-      } else {
-        confirmPasswordFeedback.text('Passwords match').css('color', 'green');
-      }
-    });
-
-    // Prevent form submission if validation fails
-    $('form').on('submit', function (e) {
-      const username = $('#username').val().trim();
-      const fullNamePattern = /^[A-Z][a-z]+( [A-Z][a-z]+)+$/;
-
-      if (!fullNamePattern.test(username)) {
-        e.preventDefault();
-        alert('Please ensure the username is a valid full name.');
-      }
-
-      const password = $('#password').val();
-      const confirmPassword = $('#confirmPassword').val();
-      const complexityPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-      if (!complexityPattern.test(password)) {
-        e.preventDefault();
-        alert('Please ensure your password meets the complexity requirements.');
-      } else if (password !== confirmPassword) {
-        e.preventDefault();
-        alert('Passwords do not match.');
-      }
-    });
-
-
+    if (!fullNamePattern.test(username)) {
+      usernameFeedback.text(
+        'Username must be a full name with at least two words, starting with uppercase letters (e.g., John Doe).'
+      ).css('color', 'red');
+    } else {
+      usernameFeedback.text('Username is valid').css('color', 'green');
+    }
   });
+
+  // Real-time email validation
+  $('#email').on('input', function () {
+    const email = $(this).val().trim();
+    const emailFeedback = $('#emailFeedback');
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (email === '') {
+      emailFeedback.text('Please enter an email address').css('color', 'red');
+      return;
+    }
+
+    if (!emailPattern.test(email)) {
+      emailFeedback.text('Please enter a valid email address').css('color', 'red');
+      return;
+    }
+
+    // Check email availability via AJAX
+    $.ajax({
+      url: '/user/check-availability',
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({ email }),
+      success: function (response) {
+        if (response.emailAvailable) {
+          emailFeedback.text('Email is available').css('color', 'green');
+        } else {
+          emailFeedback.text('Email is already registered').css('color', 'red');
+        }
+      },
+      error: function () {
+        emailFeedback.text('Error checking email availability. Please try again.').css('color', 'red');
+      },
+    });
+  });
+
+  // Real-time password validation
+  $('#password').on('input', function () {
+    const password = $(this).val();
+    const passwordFeedback = $('#passwordFeedback');
+    const complexityPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    if (password === '') {
+      passwordFeedback.text('Password is required').css('color', 'red');
+      return;
+    }
+
+    if (!complexityPattern.test(password)) {
+      passwordFeedback.text(
+        'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.'
+      ).css('color', 'red');
+    } else {
+      passwordFeedback.text('Password is valid').css('color', 'green');
+    }
+  });
+
+  // Real-time confirm password validation
+  $('#confirmPassword').on('input', function () {
+    const password = $('#password').val();
+    const confirmPassword = $(this).val();
+    const confirmPasswordFeedback = $('#confirmPasswordFeedback');
+
+    if (confirmPassword === '') {
+      confirmPasswordFeedback.text('Please confirm your password').css('color', 'red');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      confirmPasswordFeedback.text('Passwords do not match').css('color', 'red');
+    } else {
+      confirmPasswordFeedback.text('Passwords match').css('color', 'green');
+    }
+  });
+});
 </script>

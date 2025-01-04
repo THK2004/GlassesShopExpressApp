@@ -45,8 +45,9 @@ const userSchema = new Schema(
       enum: ['banned','active'],
     },
     cart: {
-        type: Object,
-        required: false,
+
+      type: Object,
+      required: false,
     },
     avatar:{
       type: String,
