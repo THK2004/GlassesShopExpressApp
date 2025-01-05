@@ -35,7 +35,9 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
-
+hbs.registerHelper('excludeFirst', function (array) {
+  return array.slice(1);
+});
 hbs.registerPartials(__dirname + '/views/partials', function (err) {});
 hbs.registerHelper('limit', function (text, limit) {
   if (text && text.length > limit) {
