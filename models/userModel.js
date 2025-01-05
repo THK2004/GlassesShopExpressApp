@@ -35,9 +35,8 @@ const userSchema = new Schema(
         enum: ['admin', 'user'],
     },
     permission:{
-        type: String,
+        type: [String],
         required: false,
-        enum: ['accounts','orders','products'],
     },
     status: {
       type: String,
