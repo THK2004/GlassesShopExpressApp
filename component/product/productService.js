@@ -132,6 +132,16 @@ async function sendOrderData (userId,receiver,address,phone,cart,status,totalPri
   };
 }
 
+async function updateStockSales(productId, newSales, newStock){
+  try{
+     const updated = await Product.updateOne({productId}, {sales: newSales, stock: newStock});
+     return updated;
+  }catch(error){
+    console.error("Error updating stock and sales:", error);
+    throw error;
+  }
+}
+
 module.exports = {
   getProductById,
   getSameBranchProduct,
@@ -139,5 +149,6 @@ module.exports = {
   getPaginatedAndFilterProducts,
   getProductReviews,
   sendReviewData,
-  sendOrderData
+  sendOrderData,
+  updateStockSales
 };

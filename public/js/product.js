@@ -8,13 +8,19 @@ function add_to_cart() {
     const productImage = document.getElementById('main-img').src;
     const productName = document.getElementById('name').textContent;
     const productPrice = document.getElementById('price').textContent;
+    const productStock = document.getElementById('stock').textContent;
+    const productSales = document.getElementById('sales').textContent;
+    const productId = document.querySelector('.product_details').dataset.productId;
 
     // Create a product object
-    const product = {   
+    const product = {  
+        productId: productId, 
         image: productImage,
         name: productName,
         price: productPrice,
-        quantity: 1 // Default quantity is 1
+        quantity: 1, // Default quantity is 1
+        stock: productStock,
+        sales: productSales
     };
     console.log(product);
 

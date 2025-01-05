@@ -112,11 +112,24 @@ const sendOrders = async (req, res) => {
     }
 }
 
+const update= async (req,res)=>{
+    const {productId, newSales, newStock} = req.body;
+    console.log('Received stock update:', {productId, newSales, newStock});
+    try{
+        const updatedProduct = await productsService.updateStockSales(productId, newSales, newStock);
+        res.status(200).json({message: 'Stock updated successfully!', updatedProduct});
+    }catch(error){
+        console.error('Error updating stock:', error);
+        res.status(500).json({message: 'Internal Server Error'});
+    }
+}
+
 module.exports = {
     getGlasses,
     getProductDetail,
     getPaginatedAndFilteredProduct,
     getPaginatedProductReviews,
     sendReviews,
-    sendOrders
+    sendOrders,
+    update
 };

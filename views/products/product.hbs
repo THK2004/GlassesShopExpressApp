@@ -17,13 +17,13 @@
                     <p><strong>Material:</strong> {{product.material}}</p>
                     <p><strong>About this product:</strong> {{product.description}}</p>
                     <p><strong>Sex:</strong> {{product.sex}}</p>
-                    <h2><strong>{{product.sales}} ITEMS SOLD!!!</strong></h2>
+                    <h2><strong id="sales">{{product.sales}}</strong> <strong> ITEMS SOLD!!!</strong></h2>
                     <h1>ONLY $<strong id="price">{{product.price}}</strong></h1>
                 </div>
 
                 <div class="tabcontent" id="purchase">
                     <h3>Purchase</h3>
-                    <p>Stock: {{product.stock}}</p>
+                    <p>Stock: <strong id="stock">{{product.stock}}</strong></p>
                     <p>Status: {{product.status}}</p>
                     <br>
                     {{#if product.stock }}
