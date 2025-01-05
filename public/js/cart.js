@@ -57,41 +57,77 @@ function clearCart(){
     document.getElementById('cart-total').textContent = '$0.00'; // Reset total to $0.00
 }
 
-async function confirmCheckOut(){
-    const userId = "1"; //temp hardcoded uid
+async function confirmCheckOut() {
     const receiver = document.getElementById('receiver').value;
     const address = document.getElementById('address').value;
     const phone = document.getElementById('phone').value;
     const cart = JSON.parse(localStorage.getItem('cart'));
-    const status = 'pending';
-    const totalPrice = document.getElementById('cart-total').textContent || null;
-    const order ={ 
-        userId, receiver, address, phone, cart, status, totalPrice
-    };  
-    console.log(order);
-   
-//Send order to server
+    const totalPrice = parseFloat(document.getElementById('cart-total').textContent);
+
+    // Validate inputs
+    if (!receiver || !address || !phone || cart.length === 0) {
+        alert('Please fill in all fields and ensure the cart is not empty.');
+        return;
+    }
+
+    const orderData = {
+        userId: "1", // Temp hardcoded user ID
+        receiver,
+        address,
+        phone,
+        cart,
+        status: 'pending',
+        totalPrice,
+    };
 
     try {
-        const response = await fetch('/glasses/api/orders', {
+        // Step 1: Send the order to the server
+        const orderResponse = await fetch('/glasses/api/orders', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(order)
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderData),
         });
-        const data = await response.json();
-        if (response.ok) {
-            console.log('Receipt sent:', data);
-            clearCart(); // Clear the cart after successful checkout
-            $('#checkoutModal').modal('hide'); // Hide the modal dialog
+
+        const orderResult = await orderResponse.json();
+
+        if (!orderResponse.ok) {
+            console.error('Failed to submit order:', orderResult.message);
+            alert('Failed to submit order. Please try again.');
+            return;
+        }
+
+        console.log('Order created successfully:', orderResult);
+
+        // Step 2: Initiate payment using the created order
+        const paymentResponse = await fetch('/user/payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                receiver,
+                address,
+                phone,
+                cart,
+                amount: totalPrice,
+            }),
+        });
+
+        const paymentData = await paymentResponse.json();
+        clearCart();
+        $('#checkoutModal').modal('hide');
+
+        if (paymentData.zp_trans_token) {
+            // Redirect to ZaloPay payment page
+            window.location.href = paymentData.order_url;
         } else {
-            console.error('Error sending receipt:', data.message);
+            console.error('Payment initiation failed:', paymentData.message);
+            alert('Failed to initiate payment. Please try again.');
         }
     } catch (error) {
-        console.error('Error sending receipt:', error);
+        console.error('Error during checkout process:', error);
+        alert('An error occurred. Please try again later.');
     }
 }
+
 
 
 // Load the cart when the page is ready

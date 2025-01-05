@@ -43,16 +43,6 @@ hbs.registerHelper('limit', function (text, limit) {
   }
   return text;
 });
-// app.use(session({
-//   secret: 'qwertyuiop',  // Replace with a strong secret key
-//   resave: false,
-//   saveUninitialized: true,
-//   store: MongoStore.create({
-//     mongoUrl: dbconfig.url,
-//     collectionName: 'sessions'
-//   }),
-//   cookie: { secure: false } // Set to true if using HTTPS
-// }));
 app.use(session({
   secret: 'userSecret', // Use a different secret for user
   resave: false,

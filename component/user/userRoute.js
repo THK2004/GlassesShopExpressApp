@@ -2,7 +2,7 @@ const passport = require('passport');
 var express = require('express');
 
 var { getRegister, postRegister, getLogin, postLogin, getCart, getlogout, checkAvailability, getProfile,
-  updateProfile,updatePassword } = require("./userController");
+  updateProfile,updatePassword, initiatePayment,handleCallback  } = require("./userController");
 const { ensureAuthenticated } = require('../../middleware/auth');
 
 var router = express.Router();
@@ -21,6 +21,9 @@ router.post('/login', postLogin);
 
 // GET cart page
 router.get('/cart', getCart);
+// Payment and callback routes
+router.post('/payment',ensureAuthenticated, initiatePayment);
+router.post('/callback', ensureAuthenticated, handleCallback);
 // ensureAuthenticated 
 
 router.get('/logout',ensureAuthenticated, getlogout);
