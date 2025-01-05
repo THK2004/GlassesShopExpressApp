@@ -1,3 +1,6 @@
+const uid = document.querySelector('#id').dataset.uId;
+console.log('uid:', uid);  
+
 // Load cart items from localStorage into the cart table
 function loadCart() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -66,7 +69,7 @@ function clearCart(){
 }
 
 async function confirmCheckOut(){
-    const userId = "1"; //temp hardcoded uid
+    const userId = uid; //temp hardcoded uid
     const receiver = document.getElementById('receiver').value;
     const address = document.getElementById('address').value;
     const phone = document.getElementById('phone').value;

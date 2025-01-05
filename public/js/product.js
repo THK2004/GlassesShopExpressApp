@@ -1,6 +1,8 @@
 if (!localStorage.getItem('cart')) {
     localStorage.setItem('cart', JSON.stringify([]));
 }
+const uid = document.querySelector('#id').dataset.uId;
+console.log('uid:', uid);   
 
 // Function to add a product to the cart
 function add_to_cart() {
@@ -45,6 +47,7 @@ function add_to_cart() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+    
     const reviewsList = document.getElementById("reviews-list");
     const reviewsPaginationControls = document.getElementById("reviews-pagination-controls");
     const productId = document.querySelector('.product_details').dataset.productId;
@@ -127,50 +130,14 @@ function openTab(event, tabName){
 
 }
 
-//SEND REVIEW
-// function sendReview() {
-//     const content = document.getElementById("comment-content").value;
-//     const productId = document.querySelector('.product_details').dataset.productId;
-//     const userId = "1"; // temp hardcode
-
-//     const commentData = {
-//         productId: productId,
-//         userId: userId,
-//         content: content
-//     };
-
-//     console.log(commentData);
-
-//     // Sending the commentData to the backend using fetch
-//     fetch('/glasses/api/comments', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify(commentData)
-//     })
-//     .then(response => {
-//         if (!response.ok) {
-//             throw new Error(`HTTP error! status: ${response.status}`);
-//         }
-//         return response.json();
-//     })
-//     .then(data => {
-//         console.log('Comment submitted successfully:', data);
-//         // Optionally, update the UI or reset the form
-//     })
-//     .catch(error => {
-//         console.error('Error submitting comment:', error);
-//     });
-// }
 async function sendReview() {
     const content = document.getElementById("comment-content").value;
     const productId = document.querySelector('.product_details').dataset.productId;
-    const userId = "1"; // Replace with the actual user ID
+    
 
     const commentData = {
         productId: productId,
-        userId: userId,
+        userId: uid,
         content: content
     };
     console.log(commentData);
