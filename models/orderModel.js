@@ -32,7 +32,8 @@ const orderModel = new schema({
         type: Number,
         required: true,
     }
-
-});
+},
+    {timestamps: true}
+);
 
 module.exports = mongoose.model('orders', orderModel, 'orders');
