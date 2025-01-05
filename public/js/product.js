@@ -1,4 +1,3 @@
-
 if (!localStorage.getItem('cart')) {
     localStorage.setItem('cart', JSON.stringify([]));
 }
@@ -6,17 +5,18 @@ if (!localStorage.getItem('cart')) {
 // Function to add a product to the cart
 function add_to_cart() {
     // Get product details from the product page
-    const productImage = document.querySelector('.product_image img').src;
-    const productName = document.querySelector('.product_details h3').textContent.replace('Name: ', '');
-    const productPrice = parseFloat(document.querySelector('.product_details p').textContent.replace('Price: $', ''));
+    const productImage = document.getElementById('main-img').src;
+    const productName = document.getElementById('name').textContent;
+    const productPrice = document.getElementById('price').textContent;
 
     // Create a product object
-    const product = {
+    const product = {   
         image: productImage,
         name: productName,
         price: productPrice,
         quantity: 1 // Default quantity is 1
     };
+    console.log(product);
 
     // Retrieve the current cart from localStorage
     let cart = JSON.parse(localStorage.getItem('cart'));
@@ -180,7 +180,7 @@ async function sendReview() {
         if (response.ok) {
             const data = await response.json();
             alert("Comment submitted successfully!");
-            fetchReviews(); // Refresh reviews
+
         } else {
             const errorData = await response.json();
             console.error("Error submitting comment:", errorData.message);
