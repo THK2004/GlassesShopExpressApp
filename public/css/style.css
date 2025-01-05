@@ -1120,3 +1120,23 @@ ul.location_icon li a {
      border: 1px solid #ccc;
      border-top: none;
    }
+
+   .product_image_slider {
+     display: flex; /* Arrange slides in a row */
+     gap: 10px; /* Add some space between slides */
+     padding: 10px 0; /* Optional padding for aesthetics */
+ }
+ 
+ .product_image_slider .slide {
+     flex: 0 0 auto; /* Prevent shrinking and set width automatically */
+     display: inline-block; /* Align slides horizontally */
+ }
+ 
+ .product_image_slider .slider-image {
+     max-width: 100%; /* Ensure images do not overflow */
+     height: auto; /* Maintain aspect ratio */
+     border: 1px solid #ddd; /* Optional: Add a border for better visibility */
+     border-radius: 5px; /* Optional: Rounded corners */
+     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow */
+ }
+ 

@@ -127,7 +127,6 @@ async function updateStock(){
     }
 }
 
-
 // Load the cart when the page is ready
 document.addEventListener('DOMContentLoaded', loadCart);
     

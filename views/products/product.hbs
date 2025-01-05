@@ -37,6 +37,18 @@
         </div>
     </div>
 
+    <div class="product_image col-4">
+        <div><strong>OTHER IMAGES</strong></div>
+        <div class="product_image_slider">
+            {{#each (excludeFirst product.image) as |image|}}
+                <div class="slide">
+                    <img src="{{image}}" alt="Product Image" class="slider-image">
+                </div>
+            {{/each}}
+        </div>
+    </div>
+
+
     <div class="review_container">
         <h2 class="review-title"><strong>Reviews</strong></h2>
         {{#if user}}    
