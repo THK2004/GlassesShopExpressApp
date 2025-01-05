@@ -100,10 +100,23 @@ const sendReviews = async (req, res) => {
     }
 };
 
+const sendOrders = async (req, res) => {
+    const { userId, receiver, address, phone,cart,status,totalPrice} = req.body;
+    console.log('Received order data:', { userId, receiver, address, phone,cart,status,totalPrice });
+    try {
+        const order = await productsService.sendOrderData(userId, receiver, address, phone, cart, status, totalPrice);
+        res.status(201).json({ message: "Order submitted successfully!", order });
+    }catch (error){
+        console.error('Error saving order data:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
 module.exports = {
     getGlasses,
     getProductDetail,
     getPaginatedAndFilteredProduct,
     getPaginatedProductReviews,
-    sendReviews
+    sendReviews,
+    sendOrders
 };
