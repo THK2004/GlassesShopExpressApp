@@ -40,7 +40,7 @@ module.exports = (passport) => {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         
-        callbackURL: '/auth/google/callback', // Adjust as needed
+        callbackURL: 'https://glassesshopexpressapp-userside.onrender.com/auth/google/callback', // Adjust as needed
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
