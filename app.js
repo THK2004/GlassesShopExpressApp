@@ -43,17 +43,23 @@ hbs.registerHelper('limit', function (text, limit) {
   }
   return text;
 });
+// app.use(session({
+//   secret: 'qwertyuiop',  // Replace with a strong secret key
+//   resave: false,
+//   saveUninitialized: true,
+//   store: MongoStore.create({
+//     mongoUrl: dbconfig.url,
+//     collectionName: 'sessions'
+//   }),
+//   cookie: { secure: false } // Set to true if using HTTPS
+// }));
 app.use(session({
-  secret: 'qwertyuiop',  // Replace with a strong secret key
+  secret: 'userSecret', // Use a different secret for user
   resave: false,
-  saveUninitialized: true,
-  store: MongoStore.create({
-    mongoUrl: dbconfig.url,
-    collectionName: 'sessions'
-  }),
-  cookie: { secure: false } // Set to true if using HTTPS
+  saveUninitialized: false,
+  store: MongoStore.create({ mongoUrl: dbconfig.url, collectionName: 'sessions' }), // Use a different collection for user sessions
+  cookie: { maxAge: 180 * 60 * 1000, name: 'user.sid' } // Use a different cookie name for user
 }));
-
 
 
 
