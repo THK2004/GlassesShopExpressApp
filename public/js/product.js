@@ -1,9 +1,9 @@
 if (!localStorage.getItem('cart')) {
     localStorage.setItem('cart', JSON.stringify([]));
 }
-const uid = document.querySelector('#id').dataset.uId;
-console.log('uid:', uid);   
-
+const uid = document.querySelector('#id')?.dataset.uId ?? "0";
+console.log('uid:', uid);
+ 
 // Function to add a product to the cart
 function add_to_cart() {
     // Get product details from the product page
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
         reviews.forEach((review) => {
             const reviewHTML = `
                 <div class="review">
-                    <h4>${review.author}</h4>
+                    <h4>From user:   ${review.userid}</h4>
                     <p>${review.content}</p>
                     <small>Rating: ${review.rating}</small>
                 </div>`;
