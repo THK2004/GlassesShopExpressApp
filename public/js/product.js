@@ -1,20 +1,28 @@
 if (!localStorage.getItem('cart')) {
     localStorage.setItem('cart', JSON.stringify([]));
 }
-
+const uid = document.querySelector('#id')?.dataset.uId ?? "0";
+console.log('uid:', uid);
+ 
 // Function to add a product to the cart
 function add_to_cart() {
     // Get product details from the product page
     const productImage = document.getElementById('main-img').src;
     const productName = document.getElementById('name').textContent;
     const productPrice = document.getElementById('price').textContent;
+    const productStock = document.getElementById('stock').textContent;
+    const productSales = document.getElementById('sales').textContent;
+    const productId = document.querySelector('.product_details').dataset.productId;
 
     // Create a product object
-    const product = {   
+    const product = {  
+        productId: productId, 
         image: productImage,
         name: productName,
         price: productPrice,
-        quantity: 1 // Default quantity is 1
+        quantity: 1, // Default quantity is 1
+        stock: productStock,
+        sales: productSales
     };
     console.log(product);
 
@@ -39,6 +47,7 @@ function add_to_cart() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+    
     const reviewsList = document.getElementById("reviews-list");
     const reviewsPaginationControls = document.getElementById("reviews-pagination-controls");
     const productId = document.querySelector('.product_details').dataset.productId;
@@ -69,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
         reviews.forEach((review) => {
             const reviewHTML = `
                 <div class="review">
-                    <h4>${review.author}</h4>
+                    <h4>From user:   ${review.userid}</h4>
                     <p>${review.content}</p>
                     <small>Rating: ${review.rating}</small>
                 </div>`;
@@ -121,50 +130,14 @@ function openTab(event, tabName){
 
 }
 
-//SEND REVIEW
-// function sendReview() {
-//     const content = document.getElementById("comment-content").value;
-//     const productId = document.querySelector('.product_details').dataset.productId;
-//     const userId = "1"; // temp hardcode
-
-//     const commentData = {
-//         productId: productId,
-//         userId: userId,
-//         content: content
-//     };
-
-//     console.log(commentData);
-
-//     // Sending the commentData to the backend using fetch
-//     fetch('/glasses/api/comments', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify(commentData)
-//     })
-//     .then(response => {
-//         if (!response.ok) {
-//             throw new Error(`HTTP error! status: ${response.status}`);
-//         }
-//         return response.json();
-//     })
-//     .then(data => {
-//         console.log('Comment submitted successfully:', data);
-//         // Optionally, update the UI or reset the form
-//     })
-//     .catch(error => {
-//         console.error('Error submitting comment:', error);
-//     });
-// }
 async function sendReview() {
     const content = document.getElementById("comment-content").value;
     const productId = document.querySelector('.product_details').dataset.productId;
-    const userId = "1"; // Replace with the actual user ID
+    
 
     const commentData = {
         productId: productId,
-        userId: userId,
+        userId: uid,
         content: content
     };
     console.log(commentData);
