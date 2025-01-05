@@ -210,7 +210,7 @@ const initiatePayment = async (req, res) => {
   const { receiver, address, phone, cart, amount } = req.body;
 
   const embed_data = JSON.stringify({ receiver, address, phone, cart, totalPrice: amount
-    ,redirecturl: "https://21bc-123-20-37-34.ngrok-free.app/home", });
+    ,redirecturl: "https://glassesshopexpressapp-userside.onrender.com/home", });
 
   const items = []; // Optionally add items for ZaloPay receipt
 
@@ -225,7 +225,7 @@ const initiatePayment = async (req, res) => {
       amount,
       description: `Payment for the order #${transID}`,
       bank_code: "",
-      callback_url: "https://21bc-123-20-37-34.ngrok-free.app/user/callback",
+      callback_url: "https://glassesshopexpressapp-userside.onrender.com/user/callback",
   };
 
   const data = config.app_id + "|" + order.app_trans_id + "|" + order.app_user + "|" + order.amount + "|" + order.app_time + "|" + order.embed_data + "|" + order.item;
