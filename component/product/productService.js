@@ -1,5 +1,6 @@
 const Product = require('../../models/productModel');
 const Review = require('../../models/reviewModel');
+const Order = require('../../models/orderModel');
 
 async function getProductById(productId) {
   try {
@@ -112,7 +113,24 @@ async function sendReviewData(productId, userId, content) {
 }
 
 
-//async function getOrderData
+async function sendOrderData (userId,receiver,address,phone,cart,status,totalPrice){
+  try{
+    const order = new Order({
+      userid: userId,
+      receiver: receiver,
+      address: address,
+      phone: phone,
+      products: cart,
+      status: status,
+      totalPrice: totalPrice,
+    }); 
+    await order.save();
+    return order;
+  }catch(error){
+    console.error("Error saving order data to db:", error);
+    throw error;
+  };
+}
 
 module.exports = {
   getProductById,
@@ -120,5 +138,6 @@ module.exports = {
   getRandomProducts,
   getPaginatedAndFilterProducts,
   getProductReviews,
-  sendReviewData
+  sendReviewData,
+  sendOrderData
 };

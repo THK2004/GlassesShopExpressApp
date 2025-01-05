@@ -25,7 +25,7 @@ function loadCart() {
         `;
     });
 
-    document.getElementById('cart-total').textContent = `$${cartTotal.toFixed(2)}`;
+    document.getElementById('cart-total').textContent = `${cartTotal.toFixed(2)}`;
 }
 
 // Update cart when quantity changes
@@ -58,48 +58,27 @@ function clearCart(){
 }
 
 async function confirmCheckOut(){
-    const userid = 1; //temp hardcoded uid
+    const userId = "1"; //temp hardcoded uid
     const receiver = document.getElementById('receiver').value;
     const address = document.getElementById('address').value;
     const phone = document.getElementById('phone').value;
     const cart = JSON.parse(localStorage.getItem('cart'));
-    const status = 'Pending';
-    const order ={
-        userid, receiver, address, phone, cart, status
+    const status = 'pending';
+    const totalPrice = document.getElementById('cart-total').textContent || null;
+    const order ={ 
+        userId, receiver, address, phone, cart, status, totalPrice
     };  
     console.log(order);
    
 //Send order to server
-/*
+
     try {
-        const response = await fetch('/glasses/api/order', {
+        const response = await fetch('/glasses/api/orders', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(receipt)
-        });
-        const data = await response.json();
-        if (response.ok) {
-            console.log('Receipt sent:', data);
-            clearCart(); // Clear the cart after successful checkout
-            $('#checkoutModal').modal('hide'); // Hide the modal dialog
-        } else {
-            console.error('Error sending receipt:', data.message);
-        }
-    } catch (error) {
-        console.error('Error sending receipt:', error);
-    }*/
-}
-/*
-async function sendOrder(order){
-    try {
-        const response = await fetch('/glasses/api/order', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(receipt)
+            body: JSON.stringify(order)
         });
         const data = await response.json();
         if (response.ok) {
@@ -113,7 +92,7 @@ async function sendOrder(order){
         console.error('Error sending receipt:', error);
     }
 }
-*/
+
 
 // Load the cart when the page is ready
 document.addEventListener('DOMContentLoaded', loadCart);

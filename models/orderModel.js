@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const schema = mongoose.Schema;
 mongoose.pluralize(null);
 
-const order = new schema({
+const orderModel = new schema({
     'userid': {
      type: String,
      required: true,
@@ -17,7 +17,22 @@ const order = new schema({
      enum: ['pending', 'shipped', 'delivered'],
     },
     'products': {
-     type: Object,
+     type: [Object],
      required: true,
     },
+    'receiver':{
+        type: String,
+        required: true,
+    },
+    'phone':{
+        type: String,
+        required: true,
+    },
+    'totalPrice':{
+        type: Number,
+        required: true,
+    }
+
 });
+
+module.exports = mongoose.model('orders', orderModel, 'orders');
