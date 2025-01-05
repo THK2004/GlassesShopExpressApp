@@ -111,6 +111,9 @@ async function sendReviewData(productId, userId, content) {
   }
 }
 
+
+//async function getOrderData
+
 module.exports = {
   getProductById,
   getSameBranchProduct,
