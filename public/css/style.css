@@ -577,7 +577,6 @@ button {
      cursor: pointer; /* Pointer cursor on hover */
      font-size: 16px;
      margin-top: 15px; /* Space above the button */
-     transition: background-color 0.3s ease; /* Smooth transition */
 }
    
 .add_to_cart:hover {
@@ -596,6 +595,17 @@ button {
      max-width: 100%;
      max-height: 100%;
      object-fit: contain;
+}
+
+.out_of_stock {
+    background-color: #dc3545; /* Red background */
+    color: #fff; /* White text */
+    padding: 10px 20px; /* Padding for the button */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: not-allowed; /* Not-allowed cursor */
+    font-size: 16px;
+    margin-top: 15px; /* Space above the button */
 }
 
 /** End Product details **/
@@ -1075,3 +1085,38 @@ ul.location_icon li a {
      flex-wrap: wrap;
      justify-content: space-between;
  }
+
+ .tab {
+     overflow: hidden;
+     border: 1px solid #ccc;
+     background-color: #f1f1f1;
+   }
+   
+   /* Style the buttons that are used to open the tab content */
+   .tab button {
+     background-color: inherit;
+     float: left;
+     border: none;
+     outline: none;
+     cursor: pointer;
+     padding: 14px 16px;
+     transition: 0.3s;
+   }
+   
+   /* Change background color of buttons on hover */
+   .tab button:hover {
+     background-color: #ddd;
+   }
+   
+   /* Create an active/current tablink class */
+   .tab button.active {
+     background-color: #ccc;
+   }
+   
+   /* Style the tab content */
+   .tabcontent {
+     display: none;
+     padding: 6px 12px;
+     border: 1px solid #ccc;
+     border-top: none;
+   }
