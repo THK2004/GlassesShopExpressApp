@@ -112,17 +112,19 @@ const sendOrders = async (req, res) => {
     }
 }
 
-const update= async (req,res)=>{
-    const {productId, newSales, newStock} = req.body;
-    console.log('Received stock update:', {productId, newSales, newStock});
-    try{
-        const updatedProduct = await productsService.updateStockSales(productId, newSales, newStock);
-        res.status(200).json({message: 'Stock updated successfully!', updatedProduct});
-    }catch(error){
-        console.error('Error updating stock:', error);
-        res.status(500).json({message: 'Internal Server Error'});
+const updateMultiple = async (req, res) => {
+    const products = req.body;  // Expecting an array of products
+    console.log('Received multiple stock updates:', products);
+    try {
+        const updatedProducts = await productsService.updateMultipleStockSales(products);
+        res.status(200).json({ message: 'Stock updated successfully!', updatedProducts });
+    } catch (error) {
+        console.error('Error updating multiple stocks:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
-}
+};
+
+
 
 module.exports = {
     getGlasses,
@@ -131,5 +133,5 @@ module.exports = {
     getPaginatedProductReviews,
     sendReviews,
     sendOrders,
-    update
+    updateMultiple
 };

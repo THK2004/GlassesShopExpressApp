@@ -132,15 +132,25 @@ async function sendOrderData (userId,receiver,address,phone,cart,status,totalPri
   };
 }
 
-async function updateStockSales(productId, newSales, newStock){
-  try{
-     const updated = await Product.updateOne({productId}, {sales: newSales, stock: newStock});
-     return updated;
-  }catch(error){
-    console.error("Error updating stock and sales:", error);
-    throw error;
+
+async function updateMultipleStockSales(products) {
+  try {
+      const updateResults = [];
+      for (const product of products) {
+          const { productId, newSales, newStock } = product;
+          const updated = await Product.updateOne(
+              { productId },
+              { sales: newSales, stock: newStock }
+          );
+          updateResults.push({ productId, updated });
+      }
+      return updateResults;
+  } catch (error) {
+      console.error("Error updating multiple stocks and sales:", error);
+      throw error;
   }
 }
+
 
 module.exports = {
   getProductById,
@@ -150,5 +160,5 @@ module.exports = {
   getProductReviews,
   sendReviewData,
   sendOrderData,
-  updateStockSales
+  updateMultipleStockSales
 };

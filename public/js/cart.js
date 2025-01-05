@@ -104,36 +104,25 @@ async function confirmCheckOut(){
 
 async function updateStock(){
     const cart = JSON.parse(localStorage.getItem('cart'));
-    console.log('cart:', cart);
-    let productId= "0";
-    let newStock = 0;
-    let newSales = 0;
-    cart.forEach((product)=>{
-        newStock = product.stock - product.quantity;
-        newSales = parseInt(product.sales)+ product.quantity;
-        productId = product.productId;
-        console.log(`product ${product.productId} stock: ${product.stock}, sales: ${product.sales}`);
-    })
+    const productsToUpdate = cart.map(product => ({
+        productId: product.productId,
+        newSales: parseInt(product.sales) + product.quantity,
+        newStock: product.stock - product.quantity
+    }));
 
-    const updatedStock ={
-        productId, newSales, newStock
-    }
-    console.log(updatedStock);
-    try{
-        const response = await fetch('/glasses/api/stockUpdate',{
+    try {
+        const response = await fetch('/glasses/api/stockUpdate', {
             method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(updatedStock)
-        })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(productsToUpdate)
+        });
         const data = await response.json();
         if(response.ok){
-            console.log('Stock updated:', data);
-        }else{
+            console.log('Stock updated for all products:', data);
+        } else {
             console.error('Error updating stock:', data.message);
         }
-    }catch(error){
+    } catch (error) {
         console.error('Error updating stock:', error);
     }
 }

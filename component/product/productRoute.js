@@ -1,5 +1,5 @@
 const express = require('express');
-const { getGlasses, getProductDetail, getPaginatedAndFilteredProduct, getPaginatedProductReviews, sendReviews, sendOrders, update } = require("./productController");
+const { getGlasses, getProductDetail, getPaginatedAndFilteredProduct, getPaginatedProductReviews, sendReviews, sendOrders, updateMultiple } = require("./productController");
 const router = express.Router();
 
 /* Route for API call */
@@ -19,6 +19,6 @@ router.post('/api/comments', sendReviews);
 
 router.post('/api/orders', sendOrders);
 
-router.patch('/api/stockUpdate', update);
+router.patch('/api/stockUpdate', updateMultiple);
 
 module.exports = router;
